@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.warm.library.find.bean.ImageBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.action.DataManager;
+import com.warm.libraryui.config.DataManager;
 import com.warm.libraryui.base.BaseAdapter;
 import com.warm.libraryui.base.BaseViewHolder;
 import com.warm.libraryui.utils.ScreenUtils;
@@ -76,12 +76,17 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy, parent, false);
-        int height = parent.getMeasuredHeight() / 4;
-        view.setMinimumHeight(height);
-        return new ViewHolder(view);
+        if (viewType==HEADER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy_header, parent, false);
+//            int height = parent.getMeasuredHeight() / 4;
+//            view.setMinimumHeight(height);
+            return new ViewHolder(view);
+        }else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy, parent, false);
+//            int height = parent.getMeasuredHeight() / 4;
+//            view.setMinimumHeight(height);
+            return new ViewHolder(view);
+        }
 
     }
 
@@ -89,26 +94,23 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
 
-        if (getItemViewType(position)==HEADER){
+        if (getItemViewType(position) == HEADER) {
             holder.cb.setVisibility(View.GONE);
-            holder.iv.setImageResource(R.drawable.ic_vec_take_photo);
-            holder.iv.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.black));
-        }else {
+            holder.iv.setImageResource( DataManager.getInstance().getConfig().getCameraIcon());
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.black));
+        } else {
             if (more) {
                 holder.cb.setVisibility(View.VISIBLE);
-                if (list.get(position-getHeaderSize()).isSelected()) {
-                    holder.cb.setImageResource(R.drawable.ic_vec_selected);
+                if (list.get(position - getHeaderSize()).isSelected()) {
+                    holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectIcon()[0]);
                 } else {
-                    holder.cb.setImageResource(R.drawable.ic_vec_select);
+                    holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectIcon()[1]);
                 }
             } else {
                 holder.cb.setVisibility(View.GONE);
             }
-            DataManager.getInstance().getILoader().loadThumbnails(holder.iv, "file://" + list.get(position-getHeaderSize()).getThumbnailPath());
+            DataManager.getInstance().getILoader().loadThumbnails(holder.iv, "file://" + list.get(position - getHeaderSize()).getThumbnailPath());
         }
-
-
-
     }
 
     @Override
@@ -128,14 +130,14 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
     public int getItemCount() {
         if (needHeader) {
             return super.getItemCount() + 1;
-        }else {
+        } else {
             return super.getItemCount();
         }
     }
 
     @Override
     public int getHeaderSize() {
-        return getItemCount()-getList().size();
+        return getItemCount() - getList().size();
     }
 
     class ViewHolder extends BaseViewHolder {
@@ -149,7 +151,7 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
             int screenWidth = ScreenUtils.getScreenWidth(itemView.getContext());
             int width = 100;
             if (screenHeight != 0 && screenWidth != 0) {
-                width = (screenWidth) / 3;
+                width = (screenWidth - itemView.getResources().getDimensionPixelOffset(R.dimen.grid_space) * 4) / 3;
             }
             frame = (FrameLayout) itemView.findViewById(R.id.item_frame);
             iv = (ImageView) itemView.findViewById(R.id.item_iv);
@@ -162,17 +164,17 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (ContentAdapter.this.getItemViewType(getAdapterPosition())==HEADER){
+                        if (ContentAdapter.this.getItemViewType(getAdapterPosition()) == HEADER) {
                             onItemSelectListener.cameraClick();
-                        }else {
-                            onItemSelectListener.itemClick(getAdapterPosition()-ContentAdapter.this.getHeaderSize(), list.get(getAdapterPosition()-ContentAdapter.this.getHeaderSize()));
+                        } else {
+                            onItemSelectListener.itemClick(getAdapterPosition() - ContentAdapter.this.getHeaderSize(), list.get(getAdapterPosition() - ContentAdapter.this.getHeaderSize()));
                         }
                     }
                 });
                 cb.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onItemSelectListener.itemSelect(getAdapterPosition()-ContentAdapter.this.getHeaderSize(), list.get(getAdapterPosition()-ContentAdapter.this.getHeaderSize()));
+                        onItemSelectListener.itemSelect(getAdapterPosition() - ContentAdapter.this.getHeaderSize(), list.get(getAdapterPosition() - ContentAdapter.this.getHeaderSize()));
                     }
                 });
             }

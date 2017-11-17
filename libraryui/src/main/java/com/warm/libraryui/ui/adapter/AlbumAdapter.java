@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.warm.library.find.bean.AlbumBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.action.DataManager;
+import com.warm.libraryui.config.DataManager;
 import com.warm.libraryui.base.BaseAdapter;
 import com.warm.libraryui.base.BaseViewHolder;
 
@@ -53,7 +53,7 @@ public class AlbumAdapter extends BaseAdapter<AlbumBean, AlbumAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, final int position) {
         DataManager.getInstance().getILoader().loadThumbnails(holder.album, list.get(position).getImage().getThumbnailPath());
 
-        holder.select.setImageResource(list.get(position).isSelected() ? R.drawable.ic_vec_selected : R.drawable.ic_vec_select);
+        holder.select.setImageResource(list.get(position).isSelected() ? DataManager.getInstance().getConfig().getSelectIcon()[0] : DataManager.getInstance().getConfig().getSelectIcon()[1]);
         holder.name.setText(list.get(position).getBucketName());
         holder.count.setText("共" + list.get(position).getCount() + "张");
     }

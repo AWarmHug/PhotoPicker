@@ -99,4 +99,6 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }
         outRect.top = mSpace;
     }
+
+
 }

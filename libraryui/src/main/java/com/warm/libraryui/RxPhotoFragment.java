@@ -1,4 +1,4 @@
-package com.warm.libraryui.action;
+package com.warm.libraryui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,10 @@ import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 
 import com.warm.library.find.bean.ImageBean;
+import com.warm.libraryui.config.PickerConfig;
+import com.warm.libraryui.config.CropConfig;
 import com.warm.libraryui.ui.CropActivity;
-import com.warm.libraryui.ui.ImageActivity;
+import com.warm.libraryui.ui.PickerActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ public class RxPhotoFragment extends Fragment {
     public static final int CROP = 2;
     public static final String KEY_SELECT_IMAGES = "select_images";
     public static final String KEY_CROP_IMAGE_PATH ="crop_images";
+
 
 
     private static final String TAG = "RxPhotoFragment--";
@@ -47,8 +50,9 @@ public class RxPhotoFragment extends Fragment {
     }
 
 
-    void openAlbum() {
-        Intent intent = new Intent(getActivity(), ImageActivity.class);
+    void openAlbum(PickerConfig PickerConfig) {
+        Intent intent = new Intent(getActivity(), PickerActivity.class);
+        intent.putExtra(PickerActivity.KEY_PICKER_CONFIG, PickerConfig);
         startActivityForResult(intent, RxPhotoFragment.ALBUM);
     }
 

@@ -8,7 +8,7 @@ import android.widget.ImageView;
  * 描述：
  */
 
-public interface ILoader {
+public interface ImageLoader {
 
     void loadThumbnails(ImageView view, String path);
 

@@ -3,7 +3,7 @@ package com.warm.photopicker;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.warm.libraryui.loader.ILoader;
+import com.warm.libraryui.loader.ImageLoader;
 
 /**
  * 作者：warm
@@ -11,7 +11,7 @@ import com.warm.libraryui.loader.ILoader;
  * 描述：
  */
 
-public class GlideLoader implements ILoader {
+public class GlideLoader implements ImageLoader {
 
 
     @Override

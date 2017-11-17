@@ -15,9 +15,9 @@ import android.widget.Button;
 
 import com.warm.library.find.bean.ImageBean;
 import com.warm.library.zip.bean.ZipInfo;
-import com.warm.libraryui.action.Config;
-import com.warm.libraryui.action.CropConfig;
-import com.warm.libraryui.action.RxPhoto;
+import com.warm.libraryui.config.PickerConfig;
+import com.warm.libraryui.config.CropConfig;
+import com.warm.libraryui.RxPhoto;
 import com.warm.libraryui.ui.adapter.ContentAdapter;
 
 import java.io.File;
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_one:
-                mRxPhoto.doImage(new Config().setMaxSelectNum(1).setCameraDir(getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "Camera"))
+                mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(1))
                         .subscribe(new Consumer<List<ImageBean>>() {
                             @Override
                             public void accept(@NonNull List<ImageBean> imageBeen) throws Exception {
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.bt_one_crop:
-                mRxPhoto.doImage(new Config().setMaxSelectNum(1).setCameraDir(getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + "Camera"))
+                mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(1))
                         .flatMap(new Function<List<ImageBean>, ObservableSource<String>>() {
                             @Override
                             public ObservableSource<String> apply(@NonNull List<ImageBean> imageBeen) throws Exception {
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.bt_one_crop_zip:
-                mRxPhoto.doImage(new Config().setMaxSelectNum(1).setCameraDir(getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + "Camera"))
+                mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(1))
                         .flatMap(new Function<List<ImageBean>, ObservableSource<String>>() {
                             @Override
                             public ObservableSource<String> apply(@NonNull List<ImageBean> imageBeen) throws Exception {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_many:
 
-                mRxPhoto.doImage(new Config().setMaxSelectNum(9).setCameraDir(getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + "Camera"))
+                mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(9))
                         .subscribe(new Consumer<List<ImageBean>>() {
                             @Override
                             public void accept(@NonNull List<ImageBean> imageBeen) throws Exception {
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.bt_many_zip:
-                mRxPhoto.doImage(new Config().setMaxSelectNum(9).setCameraDir(getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + "Camera"))
+                mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(9))
                         .map(new Function<List<ImageBean>, List<ImageBean>>() {
                             @Override
                             public List<ImageBean> apply(@NonNull List<ImageBean> imageBeens) throws Exception {

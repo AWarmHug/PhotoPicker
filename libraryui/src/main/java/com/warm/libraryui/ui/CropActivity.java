@@ -12,8 +12,8 @@ import com.warm.library.WorkExecutor;
 import com.warm.library.crop.CropView;
 import com.warm.library.zip.ZipAction;
 import com.warm.libraryui.R;
-import com.warm.libraryui.action.CropConfig;
-import com.warm.libraryui.action.RxPhotoFragment;
+import com.warm.libraryui.config.CropConfig;
+import com.warm.libraryui.RxPhotoFragment;
 
 import java.io.File;
 

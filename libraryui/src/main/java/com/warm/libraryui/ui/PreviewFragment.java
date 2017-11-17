@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.warm.library.find.bean.ImageBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.action.DataManager;
+import com.warm.libraryui.config.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,19 +64,21 @@ public class PreviewFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        max = DataManager.getInstance().getConfig().getMaxSelectNum();
         mPosition = getArguments().getInt("position");
         isAll = getArguments().getBoolean("isAll");
 
-        if (getActivity() instanceof ImageActivity) {
-            ImageActivity imageActivity = (ImageActivity) getActivity();
+        if (getActivity() instanceof PickerActivity) {
+            PickerActivity pickerActivity = (PickerActivity) getActivity();
             if (isAll) {
-                allImages = imageActivity.getAllImages();
+                allImages = pickerActivity.getAllImages();
             } else {
                 allImages = new ArrayList<>();
-                allImages.addAll(imageActivity.getSelectImages());
+                allImages.addAll(pickerActivity.getSelectImages());
             }
-            selectImages = imageActivity.getSelectImages();
+            selectImages = pickerActivity.getSelectImages();
+
+            max = pickerActivity.getConfig().getMaxSelectNum();
+
         }
     }
 
@@ -114,7 +116,7 @@ public class PreviewFragment extends Fragment {
         btSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ImageActivity)getActivity()).backInfo();
+                ((PickerActivity)getActivity()).backInfo();
 
             }
         });
@@ -180,7 +182,7 @@ public class PreviewFragment extends Fragment {
             return;
         }
         tb.setTitle(mPosition + 1 + "/" + allImages.size());
-        ivSelect.setImageResource(allImages.get(mPosition).isSelected() ? R.drawable.ic_vec_selected : R.drawable.ic_vec_select);
+        ivSelect.setImageResource(allImages.get(mPosition).isSelected() ? DataManager.getInstance().getConfig().getSelectIcon()[0]: DataManager.getInstance().getConfig().getSelectIcon()[1]);
         if (selectImages.size() != 0) {
             btSure.setEnabled(true);
             btSure.setText(String.format(Locale.CHINA, "选中(%d/%d)", selectImages.size(), max));

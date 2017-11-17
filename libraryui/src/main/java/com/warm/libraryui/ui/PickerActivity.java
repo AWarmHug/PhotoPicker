@@ -28,12 +28,13 @@ import com.warm.library.find.work.ImageFind;
 import com.warm.library.zip.ZipAction;
 import com.warm.libraryui.BuildConfig;
 import com.warm.libraryui.R;
-import com.warm.libraryui.action.Config;
-import com.warm.libraryui.action.DataManager;
-import com.warm.libraryui.action.RxPhotoFragment;
+import com.warm.libraryui.config.PickerConfig;
+import com.warm.libraryui.config.DataManager;
+import com.warm.libraryui.RxPhotoFragment;
 import com.warm.libraryui.ui.adapter.ContentAdapter;
 import com.warm.libraryui.ui.adapter.SimpleItemSelectListener;
 import com.warm.libraryui.utils.FileProvider;
+import com.warm.libraryui.weidget.SpacesItemDecoration;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,11 +49,13 @@ import java.util.Map;
  * 描述：
  */
 
-public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
+public class PickerActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int TO_CAMERA = 1;
 
-    private static final String TAG = "ImageActivity--";
+    private static final String TAG = "PickerActivity--";
+
+    public static final String KEY_PICKER_CONFIG = "key_picker_config";
 
     private RecyclerView mContent;
     private TextView mAlbum;
@@ -64,7 +67,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     private Uri photoUri;
     private ContentAdapter mContentAdapter;
 
-    private Config mConfig;
+    private PickerConfig mPickerConfig;
 
     private Button btSure;
 
@@ -85,13 +88,16 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public PickerConfig getConfig() {
+        return mPickerConfig;
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-//        mConfig = getIntent().getParcelableExtra(Config.class.getSimpleName());
-        mConfig = DataManager.getInstance().getConfig();
+        mPickerConfig = getIntent().getParcelableExtra(KEY_PICKER_CONFIG);
 
         btSure = (Button) findViewById(R.id.bt_sure);
         btSure.setOnClickListener(this);
@@ -104,7 +110,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void albumFind(List<AlbumBean> albums) {
 
-                albumPopup = new AlbumPopup(ImageActivity.this, albums, simpleItemSelectListener);
+                albumPopup = new AlbumPopup(PickerActivity.this, albums, simpleItemSelectListener);
 
                 simpleItemSelectListener.itemClick(0, albums.get(0));
                 mAlbum.setEnabled(true);
@@ -172,7 +178,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                                 mContentAdapter = new ContentAdapter(images, true);
                                 mContentAdapter.setNeedHeader(true);
                                 mContent.setAdapter(mContentAdapter);
-                                mContent.setLayoutManager(new GridLayoutManager(ImageActivity.this, 3));
+                                mContent.setLayoutManager(new GridLayoutManager(PickerActivity.this, 3));
+                                mContent.addItemDecoration(new SpacesItemDecoration(getResources().getDimensionPixelOffset(R.dimen.grid_space), 3));
                             } else {
                                 checkImages(images, mContentAdapter.getSelectedImages());
                                 if (position == 0) {
@@ -193,8 +200,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                                 @Override
                                 public void itemSelect(int position, ImageBean imageBean) {
 
-                                    if (mContentAdapter.getSelectedImages().size() >= mConfig.getMaxSelectNum() && !imageBean.isSelected()) {
-                                        Toast.makeText(ImageActivity.this, "最多选择" + mConfig.getMaxSelectNum() + "张", Toast.LENGTH_SHORT).show();
+                                    if (mContentAdapter.getSelectedImages().size() >= mPickerConfig.getMaxSelectNum() && !imageBean.isSelected()) {
+                                        Toast.makeText(PickerActivity.this, "最多选择" + mPickerConfig.getMaxSelectNum() + "张", Toast.LENGTH_SHORT).show();
                                     } else {
                                         if (!imageBean.isSelected()) {
                                             mContentAdapter.checkedAdd(position);
@@ -223,7 +230,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
         if (mContentAdapter.getSelectedImages().size() != 0) {
             btSure.setEnabled(true);
-            btSure.setText(String.format(Locale.CHINA, "选中(%d/%d)", mContentAdapter.getSelectedImages().size(), DataManager.getInstance().getConfig().getMaxSelectNum()));
+            btSure.setText(String.format(Locale.CHINA, "选中(%d/%d)", mContentAdapter.getSelectedImages().size(), mPickerConfig.getMaxSelectNum()));
             mPreview.setEnabled(true);
         } else {
             btSure.setEnabled(false);
@@ -308,7 +315,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
 
     private Uri openCamera() {
-        File parentFile = checkParent(mConfig.getCameraDir());
+        // TODO: 17/11/17
+        File parentFile = checkParent(DataManager.getInstance().getConfig().getCameraDir());
         if (parentFile != null) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             time = System.currentTimeMillis();

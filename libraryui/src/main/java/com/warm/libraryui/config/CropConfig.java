@@ -1,4 +1,4 @@
-package com.warm.libraryui.action;
+package com.warm.libraryui.config;
 
 import android.net.Uri;
 import android.os.Parcel;
@@ -19,11 +19,10 @@ public class CropConfig implements Parcelable {
     private int outWidth, outHeight;
 
 
-
-    public CropConfig(SHAPE shape,Uri imageUri,String toPath) {
+    public CropConfig(SHAPE shape, Uri imageUri, String toPath) {
         this.shape = shape;
-        this.imageUri=imageUri;
-        this.toPath=toPath;
+        this.imageUri = imageUri;
+        this.toPath = toPath;
     }
 
     public String getToPath() {
@@ -50,6 +49,7 @@ public class CropConfig implements Parcelable {
 
     /**
      * 设置显示的宽高比，如：（1：2），只有是{@link SHAPE#RECT}时有效，否则都为1。
+     *
      * @param showX 显示的宽度
      * @param showY 显示的高度
      * @return
@@ -68,6 +68,7 @@ public class CropConfig implements Parcelable {
 
     /**
      * 输出图片的宽高，不是比例，就是实在的长度，请按照实际比例传入，否则图片会扭曲变形。
+     *
      * @param outWidth
      * @param outHeight
      * @return
@@ -82,7 +83,7 @@ public class CropConfig implements Parcelable {
         return new int[]{outWidth, outHeight};
     }
 
-   public enum SHAPE {
+    public enum SHAPE {
         CIRCLE, SQUARE, RECT;
     }
 

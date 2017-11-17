@@ -1,4 +1,4 @@
-package com.warm.libraryui.action;
+package com.warm.libraryui;
 
 import android.support.v7.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import com.warm.library.find.bean.ImageBean;
 import com.warm.library.zip.ImageZip;
 import com.warm.library.zip.ZipCallBack;
 import com.warm.library.zip.bean.ZipInfo;
+import com.warm.libraryui.config.PickerConfig;
+import com.warm.libraryui.config.CropConfig;
 
 import java.util.List;
 
@@ -50,21 +52,20 @@ public class RxPhoto {
     }
 
 
-    public <T> ObservableTransformer<T, List<ImageBean>> open(final Config config) {
+    public <T> ObservableTransformer<T, List<ImageBean>> open(final PickerConfig PickerConfig) {
         return new ObservableTransformer<T, List<ImageBean>>() {
             @Override
             public ObservableSource<List<ImageBean>> apply(@NonNull Observable<T> upstream) {
-                return doImage(config);
+                return doImage(PickerConfig);
             }
         };
     }
 
 
-    public Observable<List<ImageBean>> doImage(Config config) {
+    public Observable<List<ImageBean>> doImage(PickerConfig PickerConfig) {
         //设置全局Config
-        DataManager.getInstance().setConfig(config);
         rxPhotoFragment.createSubject(RxPhotoFragment.ALBUM);
-        rxPhotoFragment.openAlbum();
+        rxPhotoFragment.openAlbum(PickerConfig);
         return rxPhotoFragment.getSubjectByConfig(RxPhotoFragment.ALBUM)
                 .flatMap(new Function<RxPhotoFragment.Out, ObservableSource<List<ImageBean>>>() {
                     @Override

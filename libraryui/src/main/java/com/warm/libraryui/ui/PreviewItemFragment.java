@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.warm.library.find.bean.ImageBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.action.DataManager;
+import com.warm.libraryui.config.DataManager;
 
 
 /**
