@@ -1,0 +1,18 @@
+*.iml
+.gradle
+/local.properties
+.idea
+build/
+.DS_Store
+/captures
+.externalNativeBuild
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
