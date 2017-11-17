@@ -27,10 +27,10 @@ import com.warm.library.find.work.AlbumFind;
 import com.warm.library.find.work.ImageFind;
 import com.warm.library.zip.ZipAction;
 import com.warm.libraryui.BuildConfig;
+import com.warm.libraryui.DataManager;
 import com.warm.libraryui.R;
-import com.warm.libraryui.config.PickerConfig;
-import com.warm.libraryui.config.DataManager;
 import com.warm.libraryui.RxPhotoFragment;
+import com.warm.libraryui.config.PickerConfig;
 import com.warm.libraryui.ui.adapter.ContentAdapter;
 import com.warm.libraryui.ui.adapter.SimpleItemSelectListener;
 import com.warm.libraryui.utils.FileProvider;
@@ -277,6 +277,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     private void goPreview(int position, boolean isAll) {
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.my_abc_popup_enter,0,0,R.anim.my_abc_popup_exit)
                 .add(R.id.content, PreviewFragment.newInstance(position, isAll))
                 .addToBackStack(null)
                 .commit();
@@ -321,10 +322,10 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             time = System.currentTimeMillis();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                photoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(parentFile, String.valueOf(time) + ".jpg"));
+                photoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(parentFile, "IMG_" + time + ".jpg"));
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } else {
-                photoUri = Uri.fromFile(new File(parentFile, String.valueOf(time) + ".jpg"));
+                photoUri = Uri.fromFile(new File(parentFile, "IMG_" + time + ".jpg"));
             }
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);//将拍取的照片保存到指定URI
             startActivityForResult(intent, TO_CAMERA);

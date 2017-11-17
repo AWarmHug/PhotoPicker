@@ -1,4 +1,4 @@
-package com.warm.libraryui.base;
+package com.warm.libraryui.ui.base;
 
 import android.support.v7.widget.RecyclerView;
 

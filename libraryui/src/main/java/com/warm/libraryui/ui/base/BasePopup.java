@@ -1,4 +1,4 @@
-package com.warm.libraryui.base;
+package com.warm.libraryui.ui.base;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

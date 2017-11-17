@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.warm.library.find.bean.ImageBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.config.DataManager;
+import com.warm.libraryui.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;

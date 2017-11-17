@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .flatMap(new Function<String, ObservableSource<List<ImageBean>>>() {
                             @Override
                             public ObservableSource<List<ImageBean>> apply(@NonNull String s) throws Exception {
+                                getPDialog().show();
                                 List<ZipInfo> zipInfos = new ArrayList<>();
                                 File file = new File(s);
                                 ZipInfo zipInfo = new ZipInfo(s
@@ -162,7 +163,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .subscribe(new Consumer<List<ImageBean>>() {
                             @Override
                             public void accept(@NonNull List<ImageBean> imageBeen) throws Exception {
+                                getPDialog().dismiss();
                                 mAdapter.insertRange(imageBeen);
+
                             }
                         });
 
@@ -185,13 +188,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public List<ImageBean> apply(@NonNull List<ImageBean> imageBeens) throws Exception {
                                 mAdapter.refreshAll(imageBeens);
-                                getPDialog().show();
                                 return imageBeens;
                             }
                         })
                         .flatMap(new Function<List<ImageBean>, ObservableSource<List<ImageBean>>>() {
                             @Override
                             public ObservableSource<List<ImageBean>> apply(@NonNull List<ImageBean> imageBeans) throws Exception {
+                                getPDialog().show();
+
                                 List<ZipInfo> zipInfos = new ArrayList<>();
                                 for (int i = 0; i < imageBeans.size(); i++) {
                                     File file = new File(imageBeans.get(i).getPath());

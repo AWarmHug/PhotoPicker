@@ -9,9 +9,9 @@ import android.widget.ImageView;
 
 import com.warm.library.find.bean.ImageBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.config.DataManager;
-import com.warm.libraryui.base.BaseAdapter;
-import com.warm.libraryui.base.BaseViewHolder;
+import com.warm.libraryui.DataManager;
+import com.warm.libraryui.ui.base.BaseAdapter;
+import com.warm.libraryui.ui.base.BaseViewHolder;
 import com.warm.libraryui.utils.ScreenUtils;
 
 import java.util.ArrayList;
@@ -109,7 +109,7 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
             } else {
                 holder.cb.setVisibility(View.GONE);
             }
-            DataManager.getInstance().getILoader().loadThumbnails(holder.iv, "file://" + list.get(position - getHeaderSize()).getThumbnailPath());
+            DataManager.getInstance().getImageLoader().loadThumbnails(holder.iv, "file://" + list.get(position - getHeaderSize()).getThumbnailPath());
         }
     }
 

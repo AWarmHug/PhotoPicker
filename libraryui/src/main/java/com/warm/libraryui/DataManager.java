@@ -1,6 +1,7 @@
-package com.warm.libraryui.config;
+package com.warm.libraryui;
 
 
+import com.warm.libraryui.config.Config;
 import com.warm.libraryui.loader.ImageLoader;
 
 /**
@@ -10,9 +11,6 @@ import com.warm.libraryui.loader.ImageLoader;
  */
 
 public class DataManager {
-
-
-
     private Config config;
 
     private ImageLoader mImageLoader;
@@ -30,7 +28,7 @@ public class DataManager {
         mImageLoader =loader;
     }
 
-    public ImageLoader getILoader() {
+    public ImageLoader getImageLoader() {
         return mImageLoader;
     }
 

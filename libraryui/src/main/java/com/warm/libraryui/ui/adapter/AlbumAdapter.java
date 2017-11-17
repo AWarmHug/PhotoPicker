@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.warm.library.find.bean.AlbumBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.config.DataManager;
-import com.warm.libraryui.base.BaseAdapter;
-import com.warm.libraryui.base.BaseViewHolder;
+import com.warm.libraryui.DataManager;
+import com.warm.libraryui.ui.base.BaseAdapter;
+import com.warm.libraryui.ui.base.BaseViewHolder;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class AlbumAdapter extends BaseAdapter<AlbumBean, AlbumAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        DataManager.getInstance().getILoader().loadThumbnails(holder.album, list.get(position).getImage().getThumbnailPath());
+        DataManager.getInstance().getImageLoader().loadThumbnails(holder.album, list.get(position).getImage().getThumbnailPath());
 
         holder.select.setImageResource(list.get(position).isSelected() ? DataManager.getInstance().getConfig().getSelectIcon()[0] : DataManager.getInstance().getConfig().getSelectIcon()[1]);
         holder.name.setText(list.get(position).getBucketName());

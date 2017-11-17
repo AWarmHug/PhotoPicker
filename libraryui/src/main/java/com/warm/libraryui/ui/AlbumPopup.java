@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.warm.library.find.bean.AlbumBean;
 import com.warm.libraryui.R;
-import com.warm.libraryui.base.BasePopup;
+import com.warm.libraryui.ui.base.BasePopup;
 import com.warm.libraryui.ui.adapter.AlbumAdapter;
 import com.warm.libraryui.ui.adapter.OnItemSelectListener;
 import com.warm.libraryui.ui.adapter.SimpleItemSelectListener;
