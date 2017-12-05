@@ -72,7 +72,6 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
     private long time;
     private String cameraPath;
-    private Uri cameraUri;
     private ContentAdapter mContentAdapter;
 
     private PickerConfig mPickerConfig;
@@ -165,7 +164,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == TO_CAMERA) {
-            if (cameraPath != null&&cameraUri!=null) {
+            if (cameraPath != null) {
 
 
                 final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -183,10 +182,10 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void run() {
                         Uri uri = ZipAction.getInstance().saveContentProvider(getContentResolver(), file, options, time);
-                        if (uri!=null) {
+                        if (uri != null) {
                             ImageBean imageBean = ImageFind.getInstance().findImageByUri(getContentResolver(), uri);
                             addCameraImage(imageBean);
-                        }else {
+                        } else {
                             Log.d(TAG, "run: 插入错误");
                             ImageBean imageBean = new ImageBean();
                             imageBean.setPath(cameraPath);
@@ -387,7 +386,6 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             } else {
                 photoUri = Uri.fromFile(file);
             }
-            cameraUri=photoUri;
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);//将拍取的照片保存到指定URI
             startActivityForResult(intent, TO_CAMERA);
 

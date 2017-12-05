@@ -93,7 +93,7 @@ public class PreviewFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black));
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.bgColor));
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

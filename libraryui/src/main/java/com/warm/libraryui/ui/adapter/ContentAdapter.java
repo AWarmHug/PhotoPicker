@@ -97,7 +97,7 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
         if (getItemViewType(position) == HEADER) {
             holder.cb.setVisibility(View.GONE);
             holder.iv.setImageResource( DataManager.getInstance().getConfig().getCameraIcon());
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.black));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.bgColor));
         } else {
             if (more) {
                 holder.cb.setVisibility(View.VISIBLE);
