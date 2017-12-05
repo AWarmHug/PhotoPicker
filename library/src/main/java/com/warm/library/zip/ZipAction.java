@@ -11,7 +11,6 @@ import android.support.annotation.WorkerThread;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.warm.library.find.bean.ImageBean;
 import com.warm.library.find.work.ImageFind;
 import com.warm.library.zip.bean.ZipInfo;
 
@@ -29,7 +28,7 @@ import java.io.OutputStream;
 public class ZipAction {
     private static final String TAG = "ZipAction";
 
-    private static ZipAction zipAction = new ZipAction();
+    private static final ZipAction zipAction = new ZipAction();
 
     public static ZipAction getInstance() {
         return zipAction;
@@ -72,7 +71,7 @@ public class ZipAction {
             saveOutput(file, bitmap, quality, format);
             quality -= 10;
         }
-        saveContentProvider(cr, file, options);
+//        saveContentProvider(cr, file, options);
         bitmap.recycle();
         return zipInfo.toPath;
     }
@@ -120,7 +119,6 @@ public class ZipAction {
      *
      * @param cr
      * @param file
-     * @param
      * @return
      */
     public Uri saveContentProvider(ContentResolver cr, File file, BitmapFactory.Options options) {
@@ -132,7 +130,6 @@ public class ZipAction {
      *
      * @param cr
      * @param file
-     * @param
      * @return
      */
     @WorkerThread
@@ -144,9 +141,11 @@ public class ZipAction {
 
         // Save the screenshot to the MediaStore
         ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.ImageColumns.DATA, file.getAbsolutePath());
+
+        values.put(MediaStore.Images.ImageColumns.DATA, file.getPath());
         values.put(MediaStore.Images.ImageColumns.TITLE, file.getName());
         values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, file.getName());
+        values.put(MediaStore.Images.Media.DESCRIPTION, file.getName());
         values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, file.getParentFile().getName());
         values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, time);
         values.put(MediaStore.Images.ImageColumns.DATE_ADDED, dateSeconds);
@@ -157,6 +156,7 @@ public class ZipAction {
             values.put(MediaStore.Images.ImageColumns.HEIGHT, options.outHeight);
         }
         values.put(MediaStore.Images.ImageColumns.SIZE, file.length());
+
 
         //判断是否该路径是否存在Uri，true：update；false：insert
         String id = ImageFind.getInstance().findImageByPath(cr, file.getPath()).getId();
@@ -195,13 +195,15 @@ public class ZipAction {
             //需要进行压缩;
             int widthSize = Math.round(realHeight / reqHeight);
             int heightSize = Math.round(realWidth / reqWidth);
-            return widthSize > heightSize ? widthSize : heightSize;
+
+            int size = widthSize > heightSize ? widthSize : heightSize;
+            return size % 2 == 0 ? size : size - 1;
         }
         return 1;
     }
 
     public interface ZipSingleCallBack {
-        void onFinish(ImageBean imageBean);
+        void onFinish(String path);
     }
 
 }

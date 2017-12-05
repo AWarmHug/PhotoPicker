@@ -6,8 +6,8 @@ import com.warm.library.find.bean.ImageBean;
 import com.warm.library.zip.ImageZip;
 import com.warm.library.zip.ZipCallBack;
 import com.warm.library.zip.bean.ZipInfo;
-import com.warm.libraryui.config.PickerConfig;
 import com.warm.libraryui.config.CropConfig;
+import com.warm.libraryui.config.PickerConfig;
 
 import java.util.List;
 
@@ -75,17 +75,18 @@ public class RxPhoto {
                 });
     }
 
-    public Observable<List<ImageBean>> doZip(final List<ZipInfo> zipInfo) {
-        return Observable.create(new ObservableOnSubscribe<List<ImageBean>>() {
+    public Observable<List<String>> doZip(final List<ZipInfo> zipInfo) {
+
+        return Observable.create(new ObservableOnSubscribe<List<String>>() {
             @Override
-            public void subscribe(@NonNull final ObservableEmitter<List<ImageBean>> e) throws Exception {
+            public void subscribe(@NonNull final ObservableEmitter<List<String>> e) throws Exception {
                 ImageZip.getInstance()
                         .zipImages(rxPhotoFragment.getContext().getContentResolver()
                                 , zipInfo
                                 , new ZipCallBack() {
                                     @Override
-                                    public void onFinish(List<ImageBean> imageBean) {
-                                        e.onNext(imageBean);
+                                    public void onFinish(List<String> path) {
+                                        e.onNext(path);
                                         e.onComplete();
                                     }
                                 });

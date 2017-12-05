@@ -2,8 +2,6 @@ package com.warm.library.zip;
 
 import android.content.ContentResolver;
 
-import com.warm.library.find.bean.ImageBean;
-import com.warm.library.find.work.ImageFind;
 import com.warm.library.zip.bean.ZipInfo;
 
 
@@ -29,9 +27,8 @@ public class ZipRunnable implements Runnable {
     @Override
     public void run() {
         String path = ZipAction.getInstance().zipImage(cr, zipInfo);
-        ImageBean imageBean = ImageFind.getInstance().findImageByPath(cr, path);
-        callBack.onFinish(imageBean);
-
+//        ImageBean imageBean = ImageFind.getInstance().findImageByPath(cr, path);
+        callBack.onFinish(path);
     }
 
 

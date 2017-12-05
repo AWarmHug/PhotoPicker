@@ -1,8 +1,6 @@
 package com.warm.library.zip;
 
 
-import com.warm.library.find.bean.ImageBean;
-
 import java.util.List;
 
 /**
@@ -12,5 +10,5 @@ import java.util.List;
  */
 
 public interface ZipCallBack {
-    void onFinish(List<ImageBean> imageBean);
+    void onFinish(List<String> imageBean);
 }

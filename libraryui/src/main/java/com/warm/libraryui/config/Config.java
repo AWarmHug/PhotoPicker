@@ -45,6 +45,11 @@ public class Config {
         return this;
     }
 
+    /**
+     *
+     * @param cameraDir 尽量不要设置data/data下的目录，可能会导致拍照后再次扫描时，查询不到。
+     *                  目前发现在乐视手机 6.0版本上存在这一的问题。
+     */
     public Config(String cameraDir) {
         this.cameraDir = cameraDir;
     }

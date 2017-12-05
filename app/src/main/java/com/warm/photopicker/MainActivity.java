@@ -1,5 +1,6 @@
 package com.warm.photopicker;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.warm.library.find.bean.ImageBean;
 import com.warm.library.zip.bean.ZipInfo;
 import com.warm.libraryui.config.PickerConfig;
@@ -24,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btOneCropZip;
     private Button btManyZip;
     private Button btMany;
+    private RxPermissions mRxPermissions;
     private RxPhoto mRxPhoto;
     private ProgressDialog pDialog;
 
@@ -100,13 +104,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mContent.setLayoutManager(new GridLayoutManager(this, 3));
 
         mRxPhoto = new RxPhoto(this);
+        mRxPermissions = new RxPermissions(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_one:
-                mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(1))
+                mRxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .flatMap(new Function<Boolean, ObservableSource<List<ImageBean>>>() {
+                            @Override
+                            public ObservableSource<List<ImageBean>> apply(@NonNull Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    return mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(1));
+                                } else {
+                                    return Observable.error(new Throwable("没有权限"));
+                                }
+                            }
+                        })
                         .subscribe(new Consumer<List<ImageBean>>() {
                             @Override
                             public void accept(@NonNull List<ImageBean> imageBeen) throws Exception {
@@ -147,9 +162,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 return mRxPhoto.doCrop(cropConfig);
                             }
                         })
-                        .flatMap(new Function<String, ObservableSource<List<ImageBean>>>() {
+                        .flatMap(new Function<String, ObservableSource<List<String>>>() {
                             @Override
-                            public ObservableSource<List<ImageBean>> apply(@NonNull String s) throws Exception {
+                            public ObservableSource<List<String>> apply(@NonNull String s) throws Exception {
                                 getPDialog().show();
                                 List<ZipInfo> zipInfos = new ArrayList<>();
                                 File file = new File(s);
@@ -158,6 +173,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         , 100 * 1024);
                                 zipInfos.add(zipInfo);
                                 return mRxPhoto.doZip(zipInfos);
+                            }
+                        })
+                        .map(new Function<List<String>, List<ImageBean>>() {
+                            @Override
+                            public List<ImageBean> apply(@NonNull List<String> list) throws Exception {
+                                List<ImageBean> images = new ArrayList<ImageBean>(list.size());
+                                for (int i = 0; i < list.size(); i++) {
+                                    ImageBean imageBean = new ImageBean("null", list.get(i));
+                                    images.add(imageBean);
+                                }
+                                return images;
                             }
                         })
                         .subscribe(new Consumer<List<ImageBean>>() {
@@ -179,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mAdapter.refreshAll(imageBeen);
                             }
                         });
-
                 break;
 
             case R.id.bt_many_zip:
@@ -202,10 +227,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                     ZipInfo zipInfo = new ZipInfo(imageBeans.get(i).getPath()
                                             , getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "zip" + file.getName()
-                                            , 100 * 1024);
+                                            /*, 100, 100*/, 100 * 1024);
                                     zipInfos.add(zipInfo);
                                 }
-                                return mRxPhoto.doZip(zipInfos);
+                                return mRxPhoto.doZip(zipInfos)
+                                        .flatMap(new Function<List<String>, ObservableSource<List<ImageBean>>>() {
+                                            @Override
+                                            public ObservableSource<List<ImageBean>> apply(@NonNull List<String> list) throws Exception {
+                                                List<ImageBean> images = new ArrayList<>(list.size());
+                                                for (int i = 0; i < list.size(); i++) {
+                                                    ImageBean imageBean = new ImageBean("null", list.get(i));
+                                                    images.add(imageBean);
+                                                }
+
+                                                return Observable.just(images);
+                                            }
+                                        });
                             }
                         })
                         .subscribe(new Consumer<List<ImageBean>>() {
