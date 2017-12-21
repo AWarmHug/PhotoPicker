@@ -1,12 +1,15 @@
 package com.warm.library.find.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * 作者：warm
  * 时间：2017-10-16 16:58
  * 描述：
  */
 
-public class AlbumBean {
+public class AlbumBean implements Parcelable {
 
     public static final String BUCKET_ID_ALL = "all";
     public static final String BUCKET_NAME_ALL = "全部图片";
@@ -69,4 +72,41 @@ public class AlbumBean {
                 ", mSelected=" + selected +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.count);
+        dest.writeString(this.bucketId);
+        dest.writeString(this.bucketName);
+        dest.writeParcelable(this.image, flags);
+        dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
+    }
+
+    public AlbumBean() {
+    }
+
+    protected AlbumBean(Parcel in) {
+        this.count = in.readInt();
+        this.bucketId = in.readString();
+        this.bucketName = in.readString();
+        this.image = in.readParcelable(ImageBean.class.getClassLoader());
+        this.selected = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<AlbumBean> CREATOR = new Parcelable.Creator<AlbumBean>() {
+        @Override
+        public AlbumBean createFromParcel(Parcel source) {
+            return new AlbumBean(source);
+        }
+
+        @Override
+        public AlbumBean[] newArray(int size) {
+            return new AlbumBean[size];
+        }
+    };
 }

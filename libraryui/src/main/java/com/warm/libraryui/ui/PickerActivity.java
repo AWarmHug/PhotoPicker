@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,7 +33,7 @@ import com.warm.library.find.work.ImageFind;
 import com.warm.library.zip.ZipAction;
 import com.warm.libraryui.DataManager;
 import com.warm.libraryui.R;
-import com.warm.libraryui.RxPhotoFragment;
+import com.warm.libraryui.rx.RxPhotoFragment;
 import com.warm.libraryui.config.PickerConfig;
 import com.warm.libraryui.ui.adapter.ContentAdapter;
 import com.warm.libraryui.ui.adapter.SimpleItemSelectListener;
@@ -52,20 +53,24 @@ import java.util.Map;
  */
 
 public class PickerActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "photoPickerTAG";
 
     public static final int TO_CAMERA = 1;
-
     //权限请求中的requestCode必须大于0
     public static final int REQUEST_CODE_PICK = 100;
+
+
     public static final int REQUEST_CODE_CAMERA = 101;
 
-
-    private static final String TAG = "PickerActivity--";
-
     public static final String KEY_PICKER_CONFIG = "key_picker_config";
+    public static final String KEY_ALBUMS = "albums";
+    public static final String KEY_CURRENT_ALBUM_POSITION = "current_album_position";
+    public static final String KEY_IMAGES = "images";
+    public static final String KEY_SELECT_IMAGES="selectImages";
+
 
     private RecyclerView mContent;
-    private TextView mAlbum;
+    private TextView tvAlbum;
     private Button mPreview;
 
     private AlbumPopup albumPopup;
@@ -77,6 +82,16 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     private PickerConfig mPickerConfig;
 
     private Button btSure;
+
+    private List<AlbumBean> mAlbums;
+
+    private int mCurrentAlbumPosition;
+
+    private List<ImageBean> mImages;
+
+    private List<ImageBean> mSelectImages;
+
+
 
 
     public List<ImageBean> getAllImages() {
@@ -96,6 +111,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public PickerConfig getConfig() {
+        Log.d(TAG, "getConfig: ");
         return mPickerConfig;
 
     }
@@ -104,41 +120,72 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-        mPickerConfig = getIntent().getParcelableExtra(KEY_PICKER_CONFIG);
 
         btSure = (Button) findViewById(R.id.bt_sure);
         btSure.setOnClickListener(this);
         mContent = (RecyclerView) findViewById(R.id.content_list);
-        mAlbum = (TextView) findViewById(R.id.album);
+        tvAlbum = (TextView) findViewById(R.id.album);
         mPreview = (Button) findViewById(R.id.preview);
-        mAlbum.setOnClickListener(this);
+        tvAlbum.setOnClickListener(this);
         mPreview.setOnClickListener(this);
+
+        Log.d(TAG, "PickerActivity--onCreate: ");
+        if (savedInstanceState != null) {
+            mPickerConfig = savedInstanceState.getParcelable(KEY_PICKER_CONFIG);
+        } else {
+            mPickerConfig = getIntent().getParcelableExtra(KEY_PICKER_CONFIG);
+        }
 
         if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PICK);
         } else {
-            findAlbum();
+            findAlbum(savedInstanceState);
         }
     }
 
-    private void findAlbum() {
+
+    private void findAlbum(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            Log.d(TAG, "findAlbum: savedInstanceState!=null");
+            mAlbums = savedInstanceState.getParcelableArrayList(KEY_ALBUMS);
+            mCurrentAlbumPosition = savedInstanceState.getInt(KEY_CURRENT_ALBUM_POSITION);
+            mImages = savedInstanceState.getParcelableArrayList(KEY_IMAGES);
+            mSelectImages=savedInstanceState.getParcelableArrayList(KEY_SELECT_IMAGES);
+            Log.d(TAG, "findAlbum: "+mImages.get(1).isSelected());
+
+            setAlbumUi(mAlbums,true);
+            setImagesUi();
+
+        } else {
+            _findAlbum();
+        }
+
+    }
+
+    private void _findAlbum() {
         AlbumFind.getInstance().findAlbum(getContentResolver(), new AlbumFindCallBack() {
             @Override
             public void albumFind(List<AlbumBean> albums) {
-
-                albumPopup = new AlbumPopup(PickerActivity.this, albums, simpleItemSelectListener);
-
-                simpleItemSelectListener.itemClick(0, albums.get(0));
-                mAlbum.setEnabled(true);
+                mAlbums = albums;
+                setAlbumUi(albums,false);
             }
         });
+    }
+
+
+    private void setAlbumUi(List<AlbumBean> albums,boolean restore) {
+        albumPopup = new AlbumPopup(PickerActivity.this, albums, simpleItemSelectListener);
+        tvAlbum.setEnabled(true);
+        if (!restore) {
+            simpleItemSelectListener.itemClick(0, albums.get(0));
+        }
     }
 
     private void onPermission(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PICK:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    findAlbum();
+                    _findAlbum();
                 } else {
                     Toast.makeText(this, "请打开文件查看权限", Toast.LENGTH_SHORT).show();
                 }
@@ -154,6 +201,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -165,19 +213,12 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == TO_CAMERA) {
             if (cameraPath != null) {
-
-
                 final BitmapFactory.Options options = new BitmapFactory.Options();
                 //负责加载图片但是不保存到内存中,
                 options.inJustDecodeBounds = true;
                 final File file = new File(cameraPath);
                 BitmapFactory.decodeFile(cameraPath, options);
-//                try {
-//                    MediaStore.Images.Media.insertImage(getContentResolver(),cameraPath,"sss","ssss");
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//
+
                 WorkExecutor.getInstance().runWorker(new Runnable() {
                     @Override
                     public void run() {
@@ -214,80 +255,89 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         public void itemClick(final int position, final AlbumBean albumBean) {
+            mCurrentAlbumPosition = position;
+
             ImageFind.getInstance()
                     .findImage(getContentResolver(), albumBean.getBucketId(), new ImageFindCallBack() {
                         @Override
                         public void imageFind(final List<ImageBean> images) {
-                            Log.d(TAG, "imageFind: size=" + images.size() + images.toString());
-                            mAlbum.setText(albumBean.getBucketName());
-
-                            albumPopup.setSelect(position);
-                            if (mContentAdapter == null) {
-                                mContentAdapter = new ContentAdapter(images, true);
-                                mContentAdapter.setNeedHeader(true);
-                                mContent.setAdapter(mContentAdapter);
-                                mContent.setLayoutManager(new GridLayoutManager(PickerActivity.this, 3));
-                                mContent.addItemDecoration(new SpacesItemDecoration(getResources().getDimensionPixelOffset(R.dimen.grid_space), 3));
-                            } else {
-                                checkImages(images, mContentAdapter.getSelectedImages());
-                                if (position == 0) {
-                                    mContentAdapter.setNeedHeader(true);
-                                } else {
-                                    mContentAdapter.setNeedHeader(false);
-                                }
-                                mContentAdapter.refreshAll(images);
-                                mContent.getLayoutManager().scrollToPosition(0);
-                            }
-
-                            mContentAdapter.setOnItemSelectListener(new SimpleItemSelectListener<ImageBean>() {
-                                @Override
-                                public void cameraClick() {
-                                    if (Build.VERSION.SDK_INT >= 23) {
-                                        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                                            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA);
-                                        } else {
-                                            openCamera();
-                                        }
-                                    } else {
-                                        openCamera();
-                                    }
-
-                                }
-
-                                @Override
-                                public void itemSelect(int position, ImageBean imageBean) {
-
-                                    if (mContentAdapter.getSelectedImages().size() >= mPickerConfig.getMaxSelectNum() && !imageBean.isSelected()) {
-                                        Toast.makeText(PickerActivity.this, "最多选择" + mPickerConfig.getMaxSelectNum() + "张", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        if (!imageBean.isSelected()) {
-                                            mContentAdapter.checkedAdd(position);
-                                        } else {
-                                            mContentAdapter.checkedRemove(position);
-                                        }
-                                        imageBean.setSelected(!imageBean.isSelected());
-                                        mContentAdapter.refreshItem(position);
-                                    }
-                                    setUiChange();
-                                }
-
-                                @Override
-                                public void itemClick(int position, ImageBean imageBean) {
-                                    goPreview(position, true);
-                                }
-                            });
-                            setUiChange();
+                            mImages = images;
+                            setImagesUi();
                         }
                     });
         }
 
     };
 
+    private void setImagesUi() {
+        tvAlbum.setText(mAlbums.get(mCurrentAlbumPosition).getBucketName());
+
+        albumPopup.setSelect(mCurrentAlbumPosition);
+        if (mContentAdapter == null) {
+            mContentAdapter = new ContentAdapter(mImages, true);
+            mContentAdapter.setNeedHeader(true);
+            mContent.setAdapter(mContentAdapter);
+            mContent.setLayoutManager(new GridLayoutManager(PickerActivity.this, 3));
+            mContent.addItemDecoration(new SpacesItemDecoration(getResources().getDimensionPixelOffset(R.dimen.grid_space), 3));
+        } else {
+            checkImages(mImages, mContentAdapter.getSelectedImages());
+            if (mCurrentAlbumPosition == 0) {
+                mContentAdapter.setNeedHeader(true);
+            } else {
+                mContentAdapter.setNeedHeader(false);
+            }
+            mContentAdapter.refreshAll(mImages);
+            mContent.getLayoutManager().scrollToPosition(0);
+        }
+        if (mSelectImages!=null&&mSelectImages.size()!=0){
+            mContentAdapter.setSelects(mSelectImages);
+        }
+
+        mContentAdapter.setOnItemSelectListener(new SimpleItemSelectListener<ImageBean>() {
+            @Override
+            public void cameraClick() {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA);
+                    } else {
+                        openCamera();
+                    }
+                } else {
+                    openCamera();
+                }
+
+            }
+
+            @Override
+            public void itemSelect(int position, ImageBean imageBean) {
+
+                if (mContentAdapter.getSelectedImages().size() >= mPickerConfig.getMaxSelectNum() && !imageBean.isSelected()) {
+                    Toast.makeText(PickerActivity.this, "最多选择" + mPickerConfig.getMaxSelectNum() + "张", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!imageBean.isSelected()) {
+                        mContentAdapter.checkedAdd(position);
+                    } else {
+                        mContentAdapter.checkedRemove(position);
+                    }
+                    imageBean.setSelected(!imageBean.isSelected());
+                    mContentAdapter.refreshItem(position);
+                }
+                setUiChange();
+            }
+
+            @Override
+            public void itemClick(int position, ImageBean imageBean) {
+                goPreview(position, true);
+            }
+        });
+        setUiChange();
+    }
+
     private void setUiChange() {
 
         if (mContentAdapter.getSelectedImages().size() != 0) {
             btSure.setEnabled(true);
-            btSure.setText(String.format(Locale.CHINA, "选中(%d/%d)", mContentAdapter.getSelectedImages().size(), mPickerConfig.getMaxSelectNum()));
+            btSure.setText(String.format(Locale.getDefault(), "选中(%d/%d)", mContentAdapter.getSelectedImages().size(), mPickerConfig.getMaxSelectNum()));
             mPreview.setEnabled(true);
         } else {
             btSure.setEnabled(false);
@@ -349,8 +399,6 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             intent.putParcelableArrayListExtra(RxPhotoFragment.KEY_SELECT_IMAGES, (ArrayList<ImageBean>) mContentAdapter.getSelectedImages());
             setResult(RESULT_OK, intent);
             finish();
-
-
         } else if (i == R.id.album) {
             if (albumPopup.isShowing()) {
                 albumPopup.dismiss();
@@ -376,7 +424,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         File parentFile = checkParent(DataManager.getInstance().getConfig().getCameraDir());
         if (parentFile != null) {
             time = System.currentTimeMillis();
-            File file = new File(parentFile, "IMG_" + time + ".jpg");
+            File file = new File(parentFile, String.format(Locale.getDefault(), "IMG_%d.jpg", time));
             Uri photoUri;
             cameraPath = file.getPath();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -403,6 +451,24 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         } else {
             return null;
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "onRestoreInstanceState: ");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: ");
+        outState.putParcelable(KEY_PICKER_CONFIG, mPickerConfig);
+        outState.putParcelableArrayList(KEY_ALBUMS, (ArrayList<? extends Parcelable>) mAlbums);
+        outState.putInt(KEY_CURRENT_ALBUM_POSITION, mCurrentAlbumPosition);
+        outState.putParcelableArrayList(KEY_IMAGES, (ArrayList<? extends Parcelable>) mContentAdapter.getList());
+        outState.putParcelableArrayList(KEY_SELECT_IMAGES, (ArrayList<? extends Parcelable>) mContentAdapter.getSelectedImages());
+
     }
 
 

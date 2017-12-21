@@ -1,4 +1,4 @@
-package com.warm.libraryui;
+package com.warm.libraryui.rx;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 
 import com.warm.library.find.bean.ImageBean;
+import com.warm.libraryui.config.CropInfo;
 import com.warm.libraryui.config.PickerConfig;
-import com.warm.libraryui.config.CropConfig;
 import com.warm.libraryui.ui.CropActivity;
 import com.warm.libraryui.ui.PickerActivity;
 
@@ -56,9 +56,9 @@ public class RxPhotoFragment extends Fragment {
         startActivityForResult(intent, RxPhotoFragment.ALBUM);
     }
 
-    void openCrop(CropConfig cropConfig) {
+    void openCrop(CropInfo cropInfo) {
         Intent intent = new Intent(getActivity(), CropActivity.class);
-        intent.putExtra(CropActivity.KEY_CROP_CONFIG, cropConfig);
+        intent.putExtra(CropActivity.KEY_CROP_INFO, cropInfo);
         startActivityForResult(intent, RxPhotoFragment.CROP);
     }
 
@@ -70,6 +70,9 @@ public class RxPhotoFragment extends Fragment {
         if (resultCode == AppCompatActivity.RESULT_OK) {
             Out out = new Out();
             PublishSubject<Out> subject = mSubjectMap.get(type);
+            if (subject==null){
+                return;
+            }
             switch (requestCode) {
                 case ALBUM:
                     List<ImageBean> images = data.getParcelableArrayListExtra(KEY_SELECT_IMAGES);
@@ -94,8 +97,6 @@ public class RxPhotoFragment extends Fragment {
                 default:
                     subject.onError(new Throwable("no action"));
                     break;
-
-
             }
 
 

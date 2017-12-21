@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.warm.library.find.bean.ImageBean;
-import com.warm.libraryui.R;
 import com.warm.libraryui.DataManager;
+import com.warm.libraryui.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +34,9 @@ import java.util.Locale;
  */
 
 public class PreviewFragment extends Fragment {
-    private static final String TAG = "PreviewFragment--";
+    private static final String TAG = "photoPickerTAG";
 
-    private List<ImageBean> allImages;
-    private List<ImageBean> selectImages;
+
     private int mPosition;
     private ViewPager pager;
     private Toolbar tb;
@@ -45,9 +45,12 @@ public class PreviewFragment extends Fragment {
     private Button btSure;
     private int max;
     private boolean isAll;
+    private List<ImageBean> allImages;
+    private List<ImageBean> selectImages;
+
 
     public static PreviewFragment newInstance(int position) {
-        return newInstance(position,true);
+        return newInstance(position, true);
     }
 
     public static PreviewFragment newInstance(int position, boolean isAll) {
@@ -60,28 +63,15 @@ public class PreviewFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG, "PreviewFragment---onCreate: ");
         mPosition = getArguments().getInt("position");
         isAll = getArguments().getBoolean("isAll");
 
-        if (getActivity() instanceof PickerActivity) {
-            PickerActivity pickerActivity = (PickerActivity) getActivity();
-            if (isAll) {
-                allImages = pickerActivity.getAllImages();
-            } else {
-                allImages = new ArrayList<>();
-                allImages.addAll(pickerActivity.getSelectImages());
-            }
-            selectImages = pickerActivity.getSelectImages();
-
-            max = pickerActivity.getConfig().getMaxSelectNum();
-
-        }
     }
-
 
 
     @Nullable
@@ -116,21 +106,35 @@ public class PreviewFragment extends Fragment {
         btSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((PickerActivity)getActivity()).backInfo();
-
+                ((PickerActivity) getActivity()).backInfo();
             }
         });
+    }
 
-        showDetail(allImages, selectImages);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-//        allImages.addAll(selectImages);
+        Log.d(TAG, "onActivityCreated: ");
+        //因为数据都是来源于PickerActivity，如果Activity恢复了，那么fragment就不需要恢复。
+
+        if (getActivity() instanceof PickerActivity) {
+            PickerActivity pickerActivity = (PickerActivity) getActivity();
+
+            if (isAll) {
+                allImages = pickerActivity.getAllImages();
+            } else {
+                allImages = new ArrayList<>();
+                allImages.addAll(pickerActivity.getSelectImages());
+            }
+            selectImages = pickerActivity.getSelectImages();
+            max = pickerActivity.getConfig().getMaxSelectNum();
+            showDetail(allImages, selectImages);
+        }
 
     }
 
-
     private void showDetail(final List<ImageBean> images, final List<ImageBean> selects) {
-
-//        checkImages(images, selects);
 
         pager.setAdapter(new Adapter(getChildFragmentManager(), images));
 
@@ -149,8 +153,6 @@ public class PreviewFragment extends Fragment {
         ivSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 if (images.get(mPosition).isSelected()) {
                     //已选择
                     if (selects.contains(images.get(mPosition))) {
@@ -174,24 +176,28 @@ public class PreviewFragment extends Fragment {
     }
 
 
+
+
     /**
      * 修改Toolbar显示内容
      */
     private void setTb() {
+        Log.d(TAG, "setTb: ");
         if (allImages == null || allImages.size() == 0) {
             return;
         }
-        tb.setTitle(mPosition + 1 + "/" + allImages.size());
-        ivSelect.setImageResource(allImages.get(mPosition).isSelected() ? DataManager.getInstance().getConfig().getSelectIcon()[0]: DataManager.getInstance().getConfig().getSelectIcon()[1]);
+        tb.setTitle(String.format(Locale.getDefault(), "%d/%d", mPosition + 1, allImages.size()));
+        ivSelect.setImageResource(allImages.get(mPosition).isSelected() ? DataManager.getInstance().getConfig().getSelectIcon()[0] : DataManager.getInstance().getConfig().getSelectIcon()[1]);
         if (selectImages.size() != 0) {
             btSure.setEnabled(true);
-            btSure.setText(String.format(Locale.CHINA, "选中(%d/%d)", selectImages.size(), max));
+            btSure.setText(String.format(Locale.getDefault(), "选中(%d/%d)", selectImages.size(), max));
         } else {
             btSure.setEnabled(false);
             btSure.setText("选中");
-
         }
     }
+
+
 
     /**
      * Toolbar 显示或者隐藏
@@ -246,5 +252,10 @@ public class PreviewFragment extends Fragment {
             }
         }
         return statusBarHeight;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }

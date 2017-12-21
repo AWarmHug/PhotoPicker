@@ -1,4 +1,4 @@
-package com.warm.libraryui;
+package com.warm.libraryui.rx;
 
 import android.support.v7.app.AppCompatActivity;
 
@@ -6,7 +6,7 @@ import com.warm.library.find.bean.ImageBean;
 import com.warm.library.zip.ImageZip;
 import com.warm.library.zip.ZipCallBack;
 import com.warm.library.zip.bean.ZipInfo;
-import com.warm.libraryui.config.CropConfig;
+import com.warm.libraryui.config.CropInfo;
 import com.warm.libraryui.config.PickerConfig;
 
 import java.util.List;
@@ -94,9 +94,9 @@ public class RxPhoto {
         });
     }
 
-    public Observable<String> doCrop(CropConfig cropConfig) {
+    public Observable<String> doCrop(CropInfo cropInfo) {
         rxPhotoFragment.createSubject(RxPhotoFragment.CROP);
-        rxPhotoFragment.openCrop(cropConfig);
+        rxPhotoFragment.openCrop(cropInfo);
         return rxPhotoFragment.getSubjectByConfig(RxPhotoFragment.CROP)
                 .flatMap(new Function<RxPhotoFragment.Out, ObservableSource<String>>() {
                     @Override

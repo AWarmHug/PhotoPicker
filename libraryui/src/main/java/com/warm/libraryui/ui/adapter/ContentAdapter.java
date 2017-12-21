@@ -1,6 +1,7 @@
 package com.warm.libraryui.ui.adapter;
 
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import java.util.List;
 public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHolder> {
 
     private static final int HEADER = -1;
-    private static final String TAG = "ContentAdapter";
+    private static final String TAG = "photoPickerTAG";
 
     private List<ImageBean> selectedImages;
 
@@ -102,8 +103,10 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
             if (more) {
                 holder.cb.setVisibility(View.VISIBLE);
                 if (list.get(position - getHeaderSize()).isSelected()) {
+                    Log.d(TAG, "pos="+position+"onBindViewHolder: 1");
                     holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectIcon()[0]);
                 } else {
+                    Log.d(TAG, "pos="+position+"onBindViewHolder: 2");
                     holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectIcon()[1]);
                 }
             } else {

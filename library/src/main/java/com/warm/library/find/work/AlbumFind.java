@@ -50,25 +50,23 @@ public class AlbumFind {
 
 
     private void returnList(AlbumFindCallBack callBack) {
-        List<AlbumBean> list=new ArrayList<>();
-        if (mMap!=null){
+        List<AlbumBean> list = new ArrayList<>();
+        if (mMap != null) {
             //一般需要一个全部类
-            int count=0;
-            for (Map.Entry<String,AlbumBean> entry: mMap.entrySet()){
+            int count = 0;
+            for (Map.Entry<String, AlbumBean> entry : mMap.entrySet()) {
                 list.add(entry.getValue());
-                count+=entry.getValue().getCount();
+                count += entry.getValue().getCount();
             }
             AlbumBean allBean = new AlbumBean();
             allBean.setBucketName(AlbumBean.BUCKET_NAME_ALL);
             allBean.setBucketId(AlbumBean.BUCKET_ID_ALL);
             allBean.setImage(list.get(0).getImage());
             allBean.setCount(count);
-            list.add(0,allBean);
+            list.add(0, allBean);
             mMap.clear();
         }
-        postAlbum(list,callBack);
-
-
+        postAlbum(list, callBack);
     }
 
     private void findAlbum(ContentResolver cr) {
@@ -108,9 +106,9 @@ public class AlbumFind {
                 String id = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID));
                 String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                 album.setCount(cursor.getCount());
-                ImageBean image=new ImageBean(id, path);
+                ImageBean image = new ImageBean(id, path);
                 album.setImage(image);
-                if (album.getImage()!=null) {
+                if (album.getImage() != null) {
                     mMap.put(album.getBucketId(), album);
                 }
             }
@@ -142,7 +140,7 @@ public class AlbumFind {
                 album.setBucketName(mUnKnowBucketName);
                 mUnknowBucketId++;
             }
-            if (album.getImage()!=null) {
+            if (album.getImage() != null) {
                 mMap.put(album.getBucketId(), album);
             }
 

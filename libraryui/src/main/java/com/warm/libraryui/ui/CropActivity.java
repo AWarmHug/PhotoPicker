@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,8 +13,8 @@ import com.warm.library.WorkExecutor;
 import com.warm.library.crop.CropView;
 import com.warm.library.zip.ZipAction;
 import com.warm.libraryui.R;
-import com.warm.libraryui.config.CropConfig;
-import com.warm.libraryui.RxPhotoFragment;
+import com.warm.libraryui.rx.RxPhotoFragment;
+import com.warm.libraryui.config.CropInfo;
 
 import java.io.File;
 
@@ -24,38 +25,48 @@ import java.io.File;
  */
 
 public class CropActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String KEY_CROP_CONFIG = "CropConfig";
-
+    private static final String TAG = "photoPickerTAG";
+    public static final String KEY_CROP_INFO = "CropInfo";
+    private Toolbar tb;
     private CropView cropView;
     private Button sure;
-    private CropConfig config;
+    private CropInfo cropInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop);
-        config = getIntent().getParcelableExtra(KEY_CROP_CONFIG);
-
-
+        if (savedInstanceState != null) {
+            cropInfo = savedInstanceState.getParcelable(KEY_CROP_INFO);
+        } else {
+            cropInfo = getIntent().getParcelableExtra(KEY_CROP_INFO);
+        }
+        tb= (Toolbar) findViewById(R.id.tb);
+        tb.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         cropView = (CropView) findViewById(R.id.cropView);
         sure = (Button) findViewById(R.id.bt_sure);
         sure.setOnClickListener(this);
 
 
-        cropView.of(config.getImageUri());
+        cropView.of(cropInfo.getImageUri());
 
-        switch (config.getShape()) {
-            case CIRCLE:
+        switch (cropInfo.getShape()) {
+            case CropInfo.CIRCLE:
                 //圆形，传入的参数，决定生成的图片是否是圆形，如果false 显示的是圆形，但实际生成的图片时正方形。类似QQ，qq显示的是圆形，但最终生成的图片还是正方形
                 cropView.asCircle(false);
                 break;
-            case SQUARE:
+            case CropInfo.SQUARE:
                 //正方形
                 cropView.asSquare();
                 break;
-            case RECT:
+            case CropInfo.RECT:
                 //按比例
-                cropView.withAspect(config.getShow()[0], config.getShow()[1]);
+                cropView.withAspect(cropInfo.getShow()[0], cropInfo.getShow()[1]);
                 break;
         }
         cropView.initialize(this);
@@ -70,12 +81,10 @@ public class CropActivity extends AppCompatActivity implements View.OnClickListe
                     .runWorker(new Runnable() {
                         @Override
                         public void run() {
-                            ZipAction.getInstance().saveOutput(new File(config.getToPath()), cropView.getOutput(), 100, Bitmap.CompressFormat.JPEG);
+                            ZipAction.getInstance().saveOutput(new File(cropInfo.getToPath()), cropView.getOutput(), 100, Bitmap.CompressFormat.JPEG);
                             finishBack();
                         }
                     });
-
-
         }
     }
 
@@ -85,11 +94,17 @@ public class CropActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 Intent intent = new Intent();
-                intent.putExtra(RxPhotoFragment.KEY_CROP_IMAGE_PATH, config.getToPath());
+                intent.putExtra(RxPhotoFragment.KEY_CROP_IMAGE_PATH, cropInfo.getToPath());
                 setResult(RESULT_OK, intent);
                 finish();
             }
         });
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_CROP_INFO, cropInfo);
     }
 }

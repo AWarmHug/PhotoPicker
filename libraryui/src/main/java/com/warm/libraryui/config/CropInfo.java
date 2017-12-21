@@ -3,6 +3,10 @@ package com.warm.libraryui.config;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * 作者：warm
@@ -10,16 +14,21 @@ import android.os.Parcelable;
  * 描述：
  */
 
-public class CropConfig implements Parcelable {
+public class CropInfo implements Parcelable {
+
+    public static final int CIRCLE = 1;
+    public static final int SQUARE = 2;
+    public static final int RECT = 3;
+
 
     private Uri imageUri;
     private String toPath;
-    private SHAPE shape;
+    private int shape;
     private int showX = 1, showY = 1;
     private int outWidth, outHeight;
 
 
-    public CropConfig(SHAPE shape, Uri imageUri, String toPath) {
+    public CropInfo(@SHAPE int shape, Uri imageUri, String toPath) {
         this.shape = shape;
         this.imageUri = imageUri;
         this.toPath = toPath;
@@ -29,7 +38,7 @@ public class CropConfig implements Parcelable {
         return toPath;
     }
 
-    public CropConfig setToPath(String toPath) {
+    public CropInfo setToPath(String toPath) {
         this.toPath = toPath;
         return this;
     }
@@ -38,11 +47,12 @@ public class CropConfig implements Parcelable {
         return imageUri;
     }
 
-    public SHAPE getShape() {
+    @SHAPE
+    public int getShape() {
         return shape;
     }
 
-    public CropConfig setShape(SHAPE shape) {
+    public CropInfo setShape(@SHAPE int shape) {
         this.shape = shape;
         return this;
     }
@@ -54,8 +64,8 @@ public class CropConfig implements Parcelable {
      * @param showY 显示的高度
      * @return
      */
-    public CropConfig setShow(int showX, int showY) {
-        if (shape == SHAPE.RECT) {
+    public CropInfo setShow(int showX, int showY) {
+        if (shape == RECT) {
             this.showX = showX;
             this.showY = showY;
         }
@@ -73,7 +83,7 @@ public class CropConfig implements Parcelable {
      * @param outHeight
      * @return
      */
-    public CropConfig setOut(int outWidth, int outHeight) {
+    public CropInfo setOut(int outWidth, int outHeight) {
         this.outWidth = outWidth;
         this.outHeight = outHeight;
         return this;
@@ -83,8 +93,10 @@ public class CropConfig implements Parcelable {
         return new int[]{outWidth, outHeight};
     }
 
-    public enum SHAPE {
-        CIRCLE, SQUARE, RECT;
+    @IntDef({CIRCLE, SQUARE, RECT})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SHAPE {
+
     }
 
     @Override
@@ -96,33 +108,32 @@ public class CropConfig implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.imageUri, flags);
         dest.writeString(this.toPath);
-        dest.writeInt(this.shape == null ? -1 : this.shape.ordinal());
+        dest.writeInt(this.shape);
         dest.writeInt(this.showX);
         dest.writeInt(this.showY);
         dest.writeInt(this.outWidth);
         dest.writeInt(this.outHeight);
     }
 
-    protected CropConfig(Parcel in) {
+    protected CropInfo(Parcel in) {
         this.imageUri = in.readParcelable(Uri.class.getClassLoader());
         this.toPath = in.readString();
-        int tmpShape = in.readInt();
-        this.shape = tmpShape == -1 ? null : SHAPE.values()[tmpShape];
+        this.shape = in.readInt();
         this.showX = in.readInt();
         this.showY = in.readInt();
         this.outWidth = in.readInt();
         this.outHeight = in.readInt();
     }
 
-    public static final Creator<CropConfig> CREATOR = new Creator<CropConfig>() {
+    public static final Creator<CropInfo> CREATOR = new Creator<CropInfo>() {
         @Override
-        public CropConfig createFromParcel(Parcel source) {
-            return new CropConfig(source);
+        public CropInfo createFromParcel(Parcel source) {
+            return new CropInfo(source);
         }
 
         @Override
-        public CropConfig[] newArray(int size) {
-            return new CropConfig[size];
+        public CropInfo[] newArray(int size) {
+            return new CropInfo[size];
         }
     };
 }

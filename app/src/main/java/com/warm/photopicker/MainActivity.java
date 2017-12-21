@@ -17,9 +17,9 @@ import android.widget.Button;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.warm.library.find.bean.ImageBean;
 import com.warm.library.zip.bean.ZipInfo;
+import com.warm.libraryui.config.CropInfo;
 import com.warm.libraryui.config.PickerConfig;
-import com.warm.libraryui.config.CropConfig;
-import com.warm.libraryui.RxPhoto;
+import com.warm.libraryui.rx.RxPhoto;
 import com.warm.libraryui.ui.adapter.ContentAdapter;
 
 import java.io.File;
@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public ObservableSource<String> apply(@NonNull List<ImageBean> imageBeen) throws Exception {
                                 File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "crop" + imageBeen.get(0).getName());
-                                CropConfig cropConfig = new CropConfig(CropConfig.SHAPE.RECT, imageBeen.get(0).getUri(), file.getPath());
-                                return mRxPhoto.doCrop(cropConfig);
+                                CropInfo cropInfo = new CropInfo(CropInfo.RECT, imageBeen.get(0).getUri(), file.getPath());
+                                return mRxPhoto.doCrop(cropInfo);
                             }
                         })
                         .subscribe(new Consumer<String>() {
@@ -157,9 +157,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public ObservableSource<String> apply(@NonNull List<ImageBean> imageBeen) throws Exception {
                                 File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "crop" + imageBeen.get(0).getName());
-                                CropConfig cropConfig = new CropConfig(CropConfig.SHAPE.SQUARE, imageBeen.get(0).getUri(), file.getPath());
-                                cropConfig.setShow(2, 1);
-                                return mRxPhoto.doCrop(cropConfig);
+                                CropInfo cropInfo = new CropInfo(CropInfo.SQUARE, imageBeen.get(0).getUri(), file.getPath());
+                                cropInfo.setShow(2, 1);
+                                return mRxPhoto.doCrop(cropInfo);
                             }
                         })
                         .flatMap(new Function<String, ObservableSource<List<String>>>() {
