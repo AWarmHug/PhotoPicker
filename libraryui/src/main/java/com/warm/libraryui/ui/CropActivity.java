@@ -41,7 +41,7 @@ public class CropActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             cropInfo = getIntent().getParcelableExtra(KEY_CROP_INFO);
         }
-        tb= (Toolbar) findViewById(R.id.tb);
+        tb = (Toolbar) findViewById(R.id.tb);
         tb.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,21 +81,32 @@ public class CropActivity extends AppCompatActivity implements View.OnClickListe
                     .runWorker(new Runnable() {
                         @Override
                         public void run() {
-                            ZipAction.getInstance().saveOutput(new File(cropInfo.getToPath()), cropView.getOutput(), 100, Bitmap.CompressFormat.JPEG);
-                            finishBack();
+                            boolean success;
+                            Bitmap bitmap = cropView.getOutput();
+                            if (bitmap==null){
+                                success=false;
+                            }else {
+                                success = ZipAction.getInstance().saveOutput(new File(cropInfo.getToPath()), bitmap, 100, Bitmap.CompressFormat.JPEG);
+                                bitmap.recycle();
+                            }
+                            finishBack(success);
+
                         }
                     });
         }
     }
 
 
-    private void finishBack() {
+    private void finishBack(final boolean success) {
         WorkExecutor.getInstance().runUi(new Runnable() {
             @Override
             public void run() {
                 Intent intent = new Intent();
-                intent.putExtra(RxPhotoFragment.KEY_CROP_IMAGE_PATH, cropInfo.getToPath());
+                if (success) {
+                    intent.putExtra(RxPhotoFragment.KEY_CROP_IMAGE_PATH, cropInfo.getToPath());
+                }
                 setResult(RESULT_OK, intent);
+
                 finish();
             }
         });

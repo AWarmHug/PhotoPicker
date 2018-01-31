@@ -191,6 +191,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void accept(@NonNull List<ImageBean> imageBeen) throws Exception {
                                 getPDialog().dismiss();
                                 mAdapter.insertRange(imageBeen);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
 
                             }
                         });

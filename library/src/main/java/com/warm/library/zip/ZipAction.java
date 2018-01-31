@@ -48,32 +48,30 @@ public class ZipAction {
         //判断原文件体积是否小于要求大小，true ：return
         if (new File(zipInfo.fromPath).length() <= zipInfo.size) {
             return zipInfo.fromPath;
-        }
+        } else {
+            //压缩和显示图片
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            //负责加载图片但是不保存到内存中,
+            options.inJustDecodeBounds = true;
+            //设置图片质量
+            BitmapFactory.decodeFile(zipInfo.fromPath, options);
+            options.inSampleSize = getSampleSize(options, zipInfo.width, zipInfo.height);
+            options.inJustDecodeBounds = false;
 
-        //压缩和显示图片
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        //负责加载图片但是不保存到内存中,
-        options.inJustDecodeBounds = true;
-        //设置图片质量
-        BitmapFactory.decodeFile(zipInfo.fromPath, options);
-        options.inSampleSize = getSampleSize(options, zipInfo.width, zipInfo.height);
-        options.inJustDecodeBounds = false;
+            Bitmap.CompressFormat format = getCompressFormat(options);
+            Bitmap bitmap = BitmapFactory.decodeFile(zipInfo.fromPath, options);
+            File file = new File(zipInfo.toPath);
 
-        Bitmap.CompressFormat format = getCompressFormat(options);
-        Bitmap bitmap = BitmapFactory.decodeFile(zipInfo.fromPath, options);
-        File file = new File(zipInfo.toPath);
-
-        saveOutput(file, bitmap, 100, format);
-
-        int quality = 90;
-        while (zipInfo.size < file.length() && quality >= 50) {
-            Log.d(TAG, "zipImage: name=" + file.getName() + "quality=" + quality);
-            saveOutput(file, bitmap, quality, format);
-            quality -= 10;
-        }
+            int quality = 90;
+            while (zipInfo.size < file.length() && quality >= 50) {
+                Log.d(TAG, "zipImage: name=" + file.getName() + "quality=" + quality);
+                saveOutput(file, bitmap, quality, format);
+                quality -= 10;
+            }
 //        saveContentProvider(cr, file, options);
-        bitmap.recycle();
-        return zipInfo.toPath;
+            bitmap.recycle();
+            return zipInfo.toPath;
+        }
     }
 
     public Bitmap.CompressFormat getCompressFormat(BitmapFactory.Options options) {
@@ -93,7 +91,7 @@ public class ZipAction {
 
     public boolean saveOutput(File file, Bitmap croppedImage, int quality, Bitmap.CompressFormat format) {
         Log.d(TAG, "saveOutput: quality=" + quality);
-        if (file != null) {
+        if (file != null && croppedImage != null) {
             OutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(file);

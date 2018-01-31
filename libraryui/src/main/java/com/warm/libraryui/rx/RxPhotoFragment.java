@@ -86,8 +86,8 @@ public class RxPhotoFragment extends Fragment {
                     break;
                 case CROP:
                     String path = data.getStringExtra(KEY_CROP_IMAGE_PATH);
-                    out.setCropPath(path);
                     if (path!=null) {
+                        out.setCropPath(path);
                         subject.onNext(out);
                         subject.onComplete();
                     } else {
@@ -98,8 +98,6 @@ public class RxPhotoFragment extends Fragment {
                     subject.onError(new Throwable("no action"));
                     break;
             }
-
-
         }
     }
 
