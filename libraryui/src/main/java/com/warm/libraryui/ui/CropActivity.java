@@ -101,12 +101,11 @@ public class CropActivity extends AppCompatActivity implements View.OnClickListe
         WorkExecutor.getInstance().runUi(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent();
+                Intent intent = getIntent();
                 if (success) {
                     intent.putExtra(RxPhotoFragment.KEY_CROP_IMAGE_PATH, cropInfo.getToPath());
                 }
                 setResult(RESULT_OK, intent);
-
                 finish();
             }
         });
