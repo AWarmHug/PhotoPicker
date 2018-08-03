@@ -52,8 +52,8 @@ public class AlbumAdapter extends BaseAdapter<AlbumBean, AlbumAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         DataManager.getInstance().getImageLoader().loadThumbnails(holder.album, list.get(position).getImage().getThumbnailPath());
-
-        holder.select.setImageResource(list.get(position).isSelected() ? DataManager.getInstance().getConfig().getSelectIcon()[0] : DataManager.getInstance().getConfig().getSelectIcon()[1]);
+        holder.select.setSelected(list.get(position).isSelected());
+        holder.select.setImageResource(DataManager.getInstance().getConfig().getSelectIcon());
         holder.name.setText(list.get(position).getBucketName());
         holder.count.setText("共" + list.get(position).getCount() + "张");
     }

@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,8 +32,8 @@ import com.warm.library.find.work.ImageFind;
 import com.warm.library.zip.ZipAction;
 import com.warm.libraryui.DataManager;
 import com.warm.libraryui.R;
-import com.warm.libraryui.rx.RxPhotoFragment;
 import com.warm.libraryui.config.PickerConfig;
+import com.warm.libraryui.rx.RxPhotoFragment;
 import com.warm.libraryui.ui.adapter.ContentAdapter;
 import com.warm.libraryui.ui.adapter.SimpleItemSelectListener;
 import com.warm.libraryui.weidget.SpacesItemDecoration;
@@ -66,14 +65,14 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     public static final String KEY_ALBUMS = "albums";
     public static final String KEY_CURRENT_ALBUM_POSITION = "current_album_position";
     public static final String KEY_IMAGES = "images";
-    public static final String KEY_SELECT_IMAGES="selectImages";
+    public static final String KEY_SELECT_IMAGES = "selectImages";
 
 
     private RecyclerView mContent;
     private TextView tvAlbum;
     private Button mPreview;
 
-    private AlbumPopup albumPopup;
+    private AlbumDialog mAlbumDialog;
 
     private long time;
     private String cameraPath;
@@ -90,8 +89,6 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     private List<ImageBean> mImages;
 
     private List<ImageBean> mSelectImages;
-
-
 
 
     public List<ImageBean> getAllImages() {
@@ -150,10 +147,10 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             mAlbums = savedInstanceState.getParcelableArrayList(KEY_ALBUMS);
             mCurrentAlbumPosition = savedInstanceState.getInt(KEY_CURRENT_ALBUM_POSITION);
             mImages = savedInstanceState.getParcelableArrayList(KEY_IMAGES);
-            mSelectImages=savedInstanceState.getParcelableArrayList(KEY_SELECT_IMAGES);
-            Log.d(TAG, "findAlbum: "+mImages.get(1).isSelected());
+            mSelectImages = savedInstanceState.getParcelableArrayList(KEY_SELECT_IMAGES);
+            Log.d(TAG, "findAlbum: " + mImages.get(1).isSelected());
 
-            setAlbumUi(mAlbums,true);
+            setAlbumUi(mAlbums, true);
             setImagesUi();
 
         } else {
@@ -167,14 +164,14 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void albumFind(List<AlbumBean> albums) {
                 mAlbums = albums;
-                setAlbumUi(albums,false);
+                setAlbumUi(albums, false);
             }
         });
     }
 
 
-    private void setAlbumUi(List<AlbumBean> albums,boolean restore) {
-        albumPopup = new AlbumPopup(PickerActivity.this, albums, simpleItemSelectListener);
+    private void setAlbumUi(List<AlbumBean> albums, boolean restore) {
+        mAlbumDialog = new AlbumDialog(PickerActivity.this, albums, simpleItemSelectListener);
         tvAlbum.setEnabled(true);
         if (!restore) {
             simpleItemSelectListener.itemClick(0, albums.get(0));
@@ -272,7 +269,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     private void setImagesUi() {
         tvAlbum.setText(mAlbums.get(mCurrentAlbumPosition).getBucketName());
 
-        albumPopup.setSelect(mCurrentAlbumPosition);
+        mAlbumDialog.setSelect(mCurrentAlbumPosition);
         if (mContentAdapter == null) {
             mContentAdapter = new ContentAdapter(mImages, true);
             mContentAdapter.setNeedHeader(true);
@@ -289,7 +286,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             mContentAdapter.refreshAll(mImages);
             mContent.getLayoutManager().scrollToPosition(0);
         }
-        if (mSelectImages!=null&&mSelectImages.size()!=0){
+        if (mSelectImages != null && mSelectImages.size() != 0) {
             mContentAdapter.setSelects(mSelectImages);
         }
 
@@ -400,10 +397,10 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             setResult(RESULT_OK, intent);
             finish();
         } else if (i == R.id.album) {
-            if (albumPopup.isShowing()) {
-                albumPopup.dismiss();
+            if (mAlbumDialog.isShowing()) {
+                mAlbumDialog.dismiss();
             } else {
-                albumPopup.showAtLocation(mContent, Gravity.BOTTOM, 0, 0);
+                mAlbumDialog.show();
             }
 
         } else if (i == R.id.preview) {
@@ -468,7 +465,6 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         outState.putInt(KEY_CURRENT_ALBUM_POSITION, mCurrentAlbumPosition);
         outState.putParcelableArrayList(KEY_IMAGES, (ArrayList<? extends Parcelable>) mContentAdapter.getList());
         outState.putParcelableArrayList(KEY_SELECT_IMAGES, (ArrayList<? extends Parcelable>) mContentAdapter.getSelectedImages());
-
     }
 
 

@@ -25,7 +25,7 @@ public class MyApp extends Application {
         Config config = new Config(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 + File.separator + "Camera")
                 .setCameraIcon(R.drawable.ic_vec_take_photo)
-                .setSelectIcon(R.drawable.ic_vec_selected, R.drawable.ic_vec_unselected);
+                .setSelectIcon(R.drawable.ic_vec_select_icon);
         DataManager.getInstance()
                 .setConfig(config)
                 .init(new GlideLoader());

@@ -1,4 +1,4 @@
-package com.warm.libraryui.weidget;
+package com.warm.photopicker;
 
 /**
  * Created by Carbs.Wang on 2016/5/12.

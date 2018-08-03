@@ -9,6 +9,7 @@ import com.warm.library.zip.bean.ZipInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * 作者：warm
@@ -26,7 +27,7 @@ public class ImageZip {
 
 
     public void zipImages(final ContentResolver cr, final List<ZipInfo> zipInfos, final ZipCallBack callBack) {
-        final List<String> images = new ArrayList<>(zipInfos.size());
+        final List<String> images = new Vector<>(zipInfos.size());
         for (int i = 0; i < zipInfos.size(); i++) {
             ZipInfo zipInfo = zipInfos.get(i);
             WorkExecutor.getInstance()

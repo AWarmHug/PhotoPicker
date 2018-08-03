@@ -74,8 +74,8 @@ public class ImageFind {
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
                     String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                     long date = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
-                    int width=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
-                    int height=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
+                    int width = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
+                    int height = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
                     ImageBean image = new ImageBean(imageId, path);
                     image.setName(name);
                     image.setDate(date);
@@ -85,7 +85,7 @@ public class ImageFind {
 //                    if (!images.contains(image)) {
                     images.add(image);
 //                    }
-                    image.setUri(Uri.withAppendedPath( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,imageId));
+                    image.setUri(Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId));
                 } while (cursor.moveToNext());
 
             }
@@ -150,8 +150,8 @@ public class ImageFind {
                 String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
                 String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                 long date = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
-                int width=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
-                int height=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
+                int width = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
+                int height = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
                 image.setId(imageId);
                 image.setName(name);
                 image.setPath(path);
@@ -159,7 +159,7 @@ public class ImageFind {
                 image.setWidth(width);
                 image.setHeight(height);
                 image.setThumbnailPath(mThumbMap.get(imageId));
-                image.setUri(Uri.withAppendedPath( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,imageId));
+                image.setUri(Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId));
             }
         } finally {
             if (cursor != null) {
@@ -195,8 +195,8 @@ public class ImageFind {
                 String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
                 String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                 long date = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
-                int width=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
-                int height=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
+                int width = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH));
+                int height = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT));
                 image.setId(imageId);
                 image.setName(name);
                 image.setPath(path);
@@ -204,7 +204,7 @@ public class ImageFind {
                 image.setWidth(width);
                 image.setHeight(height);
                 image.setThumbnailPath(mThumbMap.get(imageId));
-                image.setUri(Uri.withAppendedPath( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,imageId));
+                image.setUri(Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId));
             }
         } finally {
             if (cursor != null) {

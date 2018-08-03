@@ -19,7 +19,6 @@ public class PickerConfig implements Parcelable {
     private int maxSelectNum =1;
 
 
-
     public int getMaxSelectNum() {
         return maxSelectNum;
     }

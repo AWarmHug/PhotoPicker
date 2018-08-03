@@ -47,7 +47,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 
     public void refreshItem(int position) {
 //        notifyDataSetChanged();
-        notifyItemChanged(position+getHeaderSize());
+        notifyItemChanged(position+getHeaderSize(),new Object());
     }
 
 

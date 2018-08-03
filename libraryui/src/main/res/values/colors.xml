@@ -5,12 +5,11 @@
     <color name="colorPrimaryDark">#1e1e1e</color>
     <color name="colorAccent">#1e1e1e</color>
 
-    <color name="mainColor">#1e1e1e</color>
     <color name="buttonColor">#e7750a</color>
     <color name="buttonColorInverse">#77e7750a</color>
     <color name="white">#ffffffff</color>
     <color name="bgColor">#292424</color>
-    <color name="black_half">#88000000</color>
     <color name="black_30">#4b000000</color>
+    <color name="black_50">#89000000</color>
 
 </resources>

@@ -176,8 +176,6 @@ public class PreviewFragment extends Fragment {
     }
 
 
-
-
     /**
      * 修改Toolbar显示内容
      */
@@ -187,7 +185,8 @@ public class PreviewFragment extends Fragment {
             return;
         }
         tb.setTitle(String.format(Locale.getDefault(), "%d/%d", mPosition + 1, allImages.size()));
-        ivSelect.setImageResource(allImages.get(mPosition).isSelected() ? DataManager.getInstance().getConfig().getSelectIcon()[0] : DataManager.getInstance().getConfig().getSelectIcon()[1]);
+        ivSelect.setSelected(allImages.get(mPosition).isSelected());
+        ivSelect.setImageResource(DataManager.getInstance().getConfig().getSelectIcon());
         if (selectImages.size() != 0) {
             btSure.setEnabled(true);
             btSure.setText(String.format(Locale.getDefault(), "选中(%d/%d)", selectImages.size(), max));
@@ -196,7 +195,6 @@ public class PreviewFragment extends Fragment {
             btSure.setText("选中");
         }
     }
-
 
 
     /**

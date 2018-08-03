@@ -1,5 +1,7 @@
 package com.warm.libraryui.config;
 
+import android.support.annotation.DrawableRes;
+
 /**
  * 作者：warm
  * 时间：2017-11-17 10:44
@@ -20,19 +22,19 @@ public class Config {
     /**
      * 图片选择界面右上角的选择按钮，选中和未选中
      */
-    private int[] selectIcon;
+    private int selectIcon;
 
 
     public String getCameraDir() {
         return cameraDir;
     }
 
-    public Config setSelectIcon(int selected, int unselected){
-        selectIcon =new int[]{selected,unselected};
+    public Config setSelectIcon(@DrawableRes int drawable) {
+        selectIcon = drawable;
         return this;
     }
 
-    public int[] getSelectIcon() {
+    public int getSelectIcon() {
         return selectIcon;
     }
 
@@ -46,7 +48,6 @@ public class Config {
     }
 
     /**
-     *
      * @param cameraDir 尽量不要设置data/data下的目录，可能会导致拍照后再次扫描时，查询不到。
      *                  目前发现在乐视手机 6.0版本上存在这一的问题。
      */

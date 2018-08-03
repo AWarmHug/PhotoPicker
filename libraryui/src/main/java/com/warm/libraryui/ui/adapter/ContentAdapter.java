@@ -1,7 +1,6 @@
 package com.warm.libraryui.ui.adapter;
 
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.warm.library.find.bean.ImageBean;
-import com.warm.libraryui.R;
 import com.warm.libraryui.DataManager;
+import com.warm.libraryui.R;
 import com.warm.libraryui.ui.base.BaseAdapter;
 import com.warm.libraryui.ui.base.BaseViewHolder;
 import com.warm.libraryui.utils.ScreenUtils;
@@ -77,12 +76,12 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType==HEADER) {
+        if (viewType == HEADER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy_header, parent, false);
 //            int height = parent.getMeasuredHeight() / 4;
 //            view.setMinimumHeight(height);
             return new ViewHolder(view);
-        }else {
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy, parent, false);
 //            int height = parent.getMeasuredHeight() / 4;
 //            view.setMinimumHeight(height);
@@ -94,21 +93,15 @@ public class ContentAdapter extends BaseAdapter<ImageBean, ContentAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-
         if (getItemViewType(position) == HEADER) {
             holder.cb.setVisibility(View.GONE);
-            holder.iv.setImageResource( DataManager.getInstance().getConfig().getCameraIcon());
+            holder.iv.setImageResource(DataManager.getInstance().getConfig().getCameraIcon());
             holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.bgColor));
         } else {
             if (more) {
                 holder.cb.setVisibility(View.VISIBLE);
-                if (list.get(position - getHeaderSize()).isSelected()) {
-                    Log.d(TAG, "pos="+position+"onBindViewHolder: 1");
-                    holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectIcon()[0]);
-                } else {
-                    Log.d(TAG, "pos="+position+"onBindViewHolder: 2");
-                    holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectIcon()[1]);
-                }
+                holder.cb.setSelected(list.get(position - getHeaderSize()).isSelected());
+                holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectIcon());
             } else {
                 holder.cb.setVisibility(View.GONE);
             }
