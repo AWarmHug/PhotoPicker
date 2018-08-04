@@ -18,23 +18,21 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:layout_marginLeft="16dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_album"
-            style="@style/TextAppearance.AppCompat.Title"
+            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_toRightOf="@+id/iv_album"
+            android:layout_marginTop="8dp"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_album_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tv_album"
-            android:layout_below="@+id/tv_album"
             android:layout_marginTop="8dp"
             android:textSize="16sp" />
 

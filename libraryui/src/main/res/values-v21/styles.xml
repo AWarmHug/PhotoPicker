@@ -13,8 +13,8 @@
 
     <style name="AppTheme.Dialog.Progress" parent="Theme.AppCompat.Dialog">
 
-        <item name="android:windowEnterAnimation">@anim/my_abc_popup_enter</item>
-        <item name="android:windowExitAnimation">@anim/my_abc_popup_exit</item>
+        <item name="android:windowEnterAnimation">@anim/picker_fragment_enter</item>
+        <item name="android:windowExitAnimation">@anim/picker_fragment_exit</item>
         <item name="android:windowBackground">@color/black_50</item>
         <item name="android:textColor">@color/white</item>
         <!-- 浮于Activity之上 -->

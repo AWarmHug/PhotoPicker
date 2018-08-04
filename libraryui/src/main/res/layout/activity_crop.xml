@@ -14,7 +14,7 @@
         app:navigationIcon="@drawable/ic_vec_back"
         app:title="裁剪" />
 
-    <com.warm.library.crop.CropView
+    <com.warm.picker.crop.CropView
         android:id="@+id/cropView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
