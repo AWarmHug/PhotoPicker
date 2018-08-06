@@ -23,16 +23,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.warm.picker.WorkExecutor;
+import com.warm.picker.find.MediaFindCallBack;
 import com.warm.picker.find.entity.Album;
 import com.warm.picker.find.entity.Image;
-import com.warm.picker.find.callback.AlbumFindCallBack;
-import com.warm.picker.find.callback.ImageFindCallBack;
-import com.warm.picker.find.work.AlbumFind;
-import com.warm.picker.find.work.ImageFind;
-import com.warm.picker.zip.ZipAction;
-import com.warm.pickerui.DataManager;
+import com.warm.picker.find.filter.Filter;
+import com.warm.picker.find.filter.ImageFilter;
+import com.warm.picker.find.work.AlbumFinder;
+import com.warm.picker.find.work.ImageFinder;
 import com.warm.pickerui.R;
 import com.warm.pickerui.config.PickerConfig;
+import com.warm.pickerui.config.PickerUI;
 import com.warm.pickerui.rx.RxPhotoFragment;
 import com.warm.pickerui.ui.adapter.ContentAdapter;
 import com.warm.pickerui.ui.adapter.SimpleItemSelectListener;
@@ -89,6 +89,8 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     private List<Image> mImages;
 
     private List<Image> mSelectImages;
+
+    private ImageFilter mFilter;
 
 
     public List<Image> getAllImages() {
@@ -160,9 +162,9 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void _findAlbum() {
-        AlbumFind.getInstance().findAlbum(getContentResolver(), new AlbumFindCallBack() {
+        AlbumFinder.getInstance().findAlbum(getContentResolver(),getFilter(), new MediaFindCallBack<List<Album>>() {
             @Override
-            public void albumFind(List<Album> albums) {
+            public void mediaFound(List<Album> albums) {
                 mAlbums = albums;
                 setAlbumUi(albums, false);
             }
@@ -220,9 +222,9 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
                         options.inJustDecodeBounds = true;
                         final File file = new File(cameraPath);
                         BitmapFactory.decodeFile(cameraPath, options);
-                        Uri uri = ZipAction.getInstance().saveContentProvider(getContentResolver(), file, options, time);
+                        Uri uri = ImageFinder.getInstance().saveContentProvider(getContentResolver(), file, options, time);
                         if (uri != null) {
-                            image = ImageFind.getInstance().findImageByUri(getContentResolver(), uri);
+                            image = ImageFinder.getInstance().findImageByUri(getContentResolver(), uri);
                         } else {
                             Log.d(TAG, "run: 插入错误");
                             image = new Image();
@@ -248,14 +250,17 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
     private SimpleItemSelectListener<Album> simpleItemSelectListener = new SimpleItemSelectListener<Album>() {
 
-
+        /**
+         * @param position
+         * @param album
+         */
         @Override
         public void itemClick(final int position, final Album album) {
             mCurrentAlbumPosition = position;
-            ImageFind.getInstance()
-                    .findImage(getContentResolver(), album.getBucketId(), new ImageFindCallBack() {
+            ImageFinder.getInstance()
+                    .findImage(getContentResolver(), album.getBucketId(), getFilter(),new MediaFindCallBack<List<Image>>() {
                         @Override
-                        public void imageFind(final List<Image> images) {
+                        public void mediaFound(final List<Image> images) {
                             mImages = images;
                             setImagesUi();
                         }
@@ -263,6 +268,14 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         }
 
     };
+
+    private Filter getFilter() {
+        if (mFilter==null){
+            mFilter=  new ImageFilter();
+//            mFilter.setWithout("image/gif");
+        }
+        return mFilter;
+    }
 
     private void setImagesUi() {
         tvAlbum.setText(mAlbums.get(mCurrentAlbumPosition).getBucketName());
@@ -416,7 +429,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private void openCamera() {
-        File parentFile = checkParent(DataManager.getInstance().getConfig().getCameraDir());
+        File parentFile = checkParent(PickerUI.getInstance().getConfig().getCameraDir());
         if (parentFile != null) {
             time = System.currentTimeMillis();
             File file = new File(parentFile, String.format(Locale.getDefault(), "IMG_%d.jpg", time));

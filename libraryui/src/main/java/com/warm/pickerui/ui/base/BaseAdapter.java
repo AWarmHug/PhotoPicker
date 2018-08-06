@@ -41,13 +41,13 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
      */
     public void insertItem(int position, T t) {
         list.add(position, t);
-        notifyItemInserted(position+getHeaderSize());
-        notifyItemRangeChanged(position+getHeaderSize(), list.size());
+        notifyItemInserted(position + getHeaderSize());
+        notifyItemRangeChanged(position + getHeaderSize(), list.size());
     }
 
     public void refreshItem(int position) {
 //        notifyDataSetChanged();
-        notifyItemChanged(position+getHeaderSize(),new Object());
+        notifyItemChanged(position + getHeaderSize(), new Object());
     }
 
 
@@ -65,7 +65,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         if (list.size() == 0) {
             notifyDataSetChanged();
         } else {
-            notifyItemRangeInserted(list.size()+getHeaderSize(), tList.size());
+            notifyItemRangeInserted(list.size() + getHeaderSize(), tList.size());
             // TODO: 2017/8/8 是否需要？在单个操作的时候，需要调用批量跳转操作之后的所有数据，但是在批量操作的时候好像不需要
 //            notifyItemRangeChanged(list.size(), tList.size());
         }
@@ -95,7 +95,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
 //            notifyItemRangeChanged(position, list.size() - position);
 //        }
         List<Integer> p = new ArrayList<>();
-        p.add(position+getHeaderSize());
+        p.add(position + getHeaderSize());
         removeRange(p);
     }
 
@@ -103,18 +103,18 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
         List<T> items = new ArrayList<>();
         for (int i = 0; i < positions.size(); i++) {
             items.add(list.get(positions.get(i)));
-            notifyItemRemoved(positions.get(i) - i+getHeaderSize());
+            notifyItemRemoved(positions.get(i) - i + getHeaderSize());
         }
         list.removeAll(items);
 
-        notifyItemRangeChanged(positions.get(0)+getHeaderSize(), list.size());
+        notifyItemRangeChanged(positions.get(0) + getHeaderSize(), list.size());
     }
 
     /**
      * 移除所有数据
      */
     public void removeAll() {
-        notifyItemRangeRemoved(0+getHeaderSize(), list.size());
+        notifyItemRangeRemoved(0 + getHeaderSize(), list.size());
         list.clear();
     }
 
@@ -132,7 +132,7 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder> extends Recycler
      *
      * @return
      */
-    public int getTailSize(){
+    public int getTailSize() {
         return 0;
     }
 

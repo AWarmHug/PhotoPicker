@@ -11,8 +11,6 @@ import android.os.Parcelable;
 
 public class PickerConfig implements Parcelable {
 
-
-
     /**
      * 选择几张照片
      */

@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.warm.picker.find.entity.Image;
-import com.warm.pickerui.DataManager;
+import com.warm.pickerui.config.PickerUI;
 import com.warm.pickerui.R;
 
 import java.util.ArrayList;
@@ -186,7 +186,7 @@ public class PreviewFragment extends Fragment {
         }
         tb.setTitle(String.format(Locale.getDefault(), "%d/%d", mPosition + 1, allImages.size()));
         ivSelect.setSelected(allImages.get(mPosition).isSelected());
-        ivSelect.setImageResource(DataManager.getInstance().getConfig().getSelectDrawable());
+        ivSelect.setImageResource(PickerUI.getInstance().getConfig().getSelectDrawable());
         if (selectImages.size() != 0) {
             btSure.setEnabled(true);
             btSure.setText(String.format(Locale.getDefault(), "选中(%d/%d)", selectImages.size(), max));

@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.warm.picker.find.entity.Image;
-import com.warm.pickerui.DataManager;
+import com.warm.pickerui.config.PickerUI;
 import com.warm.pickerui.R;
 import com.warm.pickerui.ui.base.BaseAdapter;
 import com.warm.pickerui.ui.base.BaseViewHolder;
@@ -95,17 +96,19 @@ public class ContentAdapter extends BaseAdapter<Image, ContentAdapter.ViewHolder
 
         if (getItemViewType(position) == HEADER) {
             holder.cb.setVisibility(View.GONE);
-            holder.iv.setImageResource(DataManager.getInstance().getConfig().getCameraIcon());
+            holder.iv.setImageResource(PickerUI.getInstance().getConfig().getCameraIcon());
             holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.bgColor));
         } else {
             if (more) {
                 holder.cb.setVisibility(View.VISIBLE);
                 holder.cb.setSelected(list.get(position - getHeaderSize()).isSelected());
-                holder.cb.setImageResource(DataManager.getInstance().getConfig().getSelectDrawable());
+                holder.cb.setImageResource(PickerUI.getInstance().getConfig().getSelectDrawable());
             } else {
                 holder.cb.setVisibility(View.GONE);
             }
-            DataManager.getInstance().getImageLoader().loadThumbnails(holder.iv, "file://" + list.get(position - getHeaderSize()).getThumbnailPath());
+            PickerUI.getInstance().getImageLoader().loadThumbnails(holder.iv, "file://" + list.get(position - getHeaderSize()).getThumbnailPath());
+            holder.type.setVisibility(View.VISIBLE);
+            holder.type.setText(list.get(position-getHeaderSize()).getMimeType());
         }
     }
 
@@ -140,6 +143,7 @@ public class ContentAdapter extends BaseAdapter<Image, ContentAdapter.ViewHolder
         FrameLayout frame;
         ImageView iv;
         ImageView cb;
+        TextView type;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -152,7 +156,7 @@ public class ContentAdapter extends BaseAdapter<Image, ContentAdapter.ViewHolder
             frame = (FrameLayout) itemView.findViewById(R.id.item_frame);
             iv = (ImageView) itemView.findViewById(R.id.item_iv);
             cb = (ImageView) itemView.findViewById(R.id.item_cv);
-
+            type = itemView.findViewById(R.id.item_type);
             frame.getLayoutParams().width = width;
             frame.getLayoutParams().height = width;
 

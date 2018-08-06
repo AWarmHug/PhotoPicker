@@ -11,6 +11,21 @@ import android.provider.MediaStore;
  */
 public class Video extends BaseMedia {
 
+    public static final String[] PROJECTIONS = {MediaStore.MediaColumns._ID,
+            MediaStore.MediaColumns.DISPLAY_NAME,
+            MediaStore.MediaColumns.DATA,
+            MediaStore.MediaColumns.DATE_ADDED,
+            MediaStore.MediaColumns.SIZE,
+            MediaStore.MediaColumns.WIDTH,
+            MediaStore.MediaColumns.HEIGHT,
+            MediaStore.MediaColumns.MIME_TYPE,
+            BUCKET_ID,
+            BUCKET_DISPLAY_NAME,
+            DATE_TAKEN,
+            MediaStore.Video.VideoColumns.DURATION,
+            MediaStore.Video.VideoColumns.ARTIST,
+            MediaStore.Video.VideoColumns.ALBUM,
+            MediaStore.Video.VideoColumns.RESOLUTION};
 
     public static Video createBy(Cursor cursor) {
         Video video = new Video();
@@ -21,6 +36,7 @@ public class Video extends BaseMedia {
         video.setResolution(cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.RESOLUTION)));
         return video;
     }
+
 
     /**
      * 时长

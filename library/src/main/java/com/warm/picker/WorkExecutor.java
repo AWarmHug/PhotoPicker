@@ -31,8 +31,6 @@ public class WorkExecutor {
     }
 
 
-
-
     public void runUi(Runnable runnable) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             runnable.run();
@@ -45,7 +43,7 @@ public class WorkExecutor {
 
     private void checkWorkExecutor() {
         if (mExecutorService == null) {
-            mExecutorService = Executors.newCachedThreadPool();
+            mExecutorService = Executors.newFixedThreadPool(3);
         }
     }
 

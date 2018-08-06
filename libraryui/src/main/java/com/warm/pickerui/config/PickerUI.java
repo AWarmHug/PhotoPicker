@@ -1,7 +1,6 @@
-package com.warm.pickerui;
+package com.warm.pickerui.config;
 
 
-import com.warm.pickerui.config.Config;
 import com.warm.pickerui.loader.ImageLoader;
 
 /**
@@ -10,18 +9,18 @@ import com.warm.pickerui.loader.ImageLoader;
  * 描述：
  */
 
-public class DataManager {
+public class PickerUI {
     private Config config;
 
     private ImageLoader mImageLoader;
 
-    private static DataManager mDataManager = new DataManager();
+    private static PickerUI sMPickerUI = new PickerUI();
 
-    private DataManager() {
+    private PickerUI() {
     }
 
-    public static DataManager getInstance() {
-        return mDataManager;
+    public static PickerUI getInstance() {
+        return sMPickerUI;
     }
 
     public void init(ImageLoader loader){
@@ -37,7 +36,7 @@ public class DataManager {
         return config;
     }
 
-    public DataManager setConfig(Config config) {
+    public PickerUI setConfig(Config config) {
         this.config = config;
         return this;
     }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.warm.picker.find.entity.Image;
 import com.warm.pickerui.R;
-import com.warm.pickerui.DataManager;
+import com.warm.pickerui.config.PickerUI;
 
 
 /**
@@ -50,7 +50,7 @@ public class PreviewItemFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         pv = (PhotoView) view.findViewById(R.id.pv);
-        DataManager.getInstance().getImageLoader().load(pv, mImage.getData());
+        PickerUI.getInstance().getImageLoader().load(pv, mImage.getData());
         pv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

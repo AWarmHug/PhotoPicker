@@ -3,9 +3,10 @@ package com.warm.pickerui.rx;
 import android.support.v7.app.AppCompatActivity;
 
 import com.warm.picker.find.entity.Image;
+import com.warm.picker.zip.work.ImageCompressor;
 import com.warm.picker.zip.ImageZip;
-import com.warm.picker.zip.ZipCallBack;
-import com.warm.picker.zip.bean.ZipInfo;
+import com.warm.picker.zip.CompressCallBack;
+import com.warm.picker.zip.entity.CompressInfo;
 import com.warm.pickerui.config.CropConfig;
 import com.warm.pickerui.config.PickerConfig;
 
@@ -75,15 +76,15 @@ public class RxPhoto {
                 });
     }
 
-    public Observable<List<String>> doZip(final List<ZipInfo> zipInfo) {
+    public Observable<List<String>> doZip(final List<CompressInfo> compressInfo) {
 
         return Observable.create(new ObservableOnSubscribe<List<String>>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<List<String>> e) {
                 ImageZip.getInstance()
-                        .zipImages(zipInfo, new ZipCallBack() {
+                        .zipImages(ImageCompressor.getInstance(),compressInfo, new CompressCallBack() {
                                     @Override
-                                    public void onFinish(List<String> path) {
+                                    public void onCompress(List<String> path) {
                                         e.onNext(path);
                                         e.onComplete();
                                     }

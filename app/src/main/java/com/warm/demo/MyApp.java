@@ -3,7 +3,7 @@ package com.warm.demo;
 import android.app.Application;
 import android.os.Environment;
 
-import com.warm.pickerui.DataManager;
+import com.warm.pickerui.config.PickerUI;
 import com.warm.pickerui.config.Config;
 
 import java.io.File;
@@ -26,7 +26,7 @@ public class MyApp extends Application {
                 + File.separator + "Camera")
                 .setCameraIcon(R.drawable.ic_vec_take_photo)
                 .setSelectDrawable(R.drawable.ic_vec_select_icon);
-        DataManager.getInstance()
+        PickerUI.getInstance()
                 .setConfig(config)
                 .init(new GlideLoader());
     }

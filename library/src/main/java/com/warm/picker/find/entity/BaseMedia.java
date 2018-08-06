@@ -55,6 +55,7 @@ public class BaseMedia implements Parcelable {
     protected long size;
     protected int width;
     protected int height;
+    protected String mimeType;
     protected String bucketId;
     protected String bucketDisplayName;
     protected long dateTaken;
@@ -70,6 +71,7 @@ public class BaseMedia implements Parcelable {
         size = cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns.SIZE));
         width = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH));
         height = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT));
+        mimeType=cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
         bucketId = cursor.getString(cursor.getColumnIndex(BUCKET_ID));
         bucketDisplayName = cursor.getString(cursor.getColumnIndex(BUCKET_DISPLAY_NAME));
         dateTaken = cursor.getLong(cursor.getColumnIndex(DATE_TAKEN));
@@ -81,6 +83,14 @@ public class BaseMedia implements Parcelable {
     public BaseMedia(long id, String data) {
         this.id = id;
         this.data = data;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     public long getId() {
@@ -221,6 +231,7 @@ public class BaseMedia implements Parcelable {
         dest.writeLong(this.size);
         dest.writeInt(this.width);
         dest.writeInt(this.height);
+        dest.writeString(this.mimeType);
         dest.writeString(this.bucketId);
         dest.writeString(this.bucketDisplayName);
         dest.writeLong(this.dateTaken);
@@ -236,6 +247,7 @@ public class BaseMedia implements Parcelable {
         this.size = in.readLong();
         this.width = in.readInt();
         this.height = in.readInt();
+        this.mimeType = in.readString();
         this.bucketId = in.readString();
         this.bucketDisplayName = in.readString();
         this.dateTaken = in.readLong();

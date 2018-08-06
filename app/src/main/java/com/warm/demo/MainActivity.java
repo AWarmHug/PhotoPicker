@@ -15,8 +15,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.warm.picker.find.MediaFindCallBack;
+import com.warm.picker.find.entity.Album;
 import com.warm.picker.find.entity.Image;
-import com.warm.picker.zip.bean.ZipInfo;
+import com.warm.picker.find.entity.Video;
+import com.warm.picker.find.filter.VideoFilter;
+import com.warm.picker.find.work.VideoFinder;
+import com.warm.picker.zip.entity.CompressInfo;
 import com.warm.pickerui.config.CropConfig;
 import com.warm.pickerui.config.PickerConfig;
 import com.warm.pickerui.rx.RxPhoto;
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RxPermissions mRxPermissions;
     private RxPhoto mRxPhoto;
     private ProgressDialog pDialog;
+    private VideoFilter mFilter;
 
     public ProgressDialog getPDialog() {
         if (pDialog == null) {
@@ -105,6 +111,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mRxPhoto = new RxPhoto(this);
         mRxPermissions = new RxPermissions(this);
+
+        mRxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) {
+                        if (mFilter==null){
+                            mFilter=new VideoFilter();
+                        }
+                        VideoFinder.getInstance().findVideo(getContentResolver(), Album.BUCKET_ID_ALL, null,new MediaFindCallBack<List<Video>>() {
+                            @Override
+                            public void mediaFound(List<Video> videos) {
+                                Log.d(TAG, "mediaFound: " + videos);
+                                Log.d(TAG, "mediaFound: " + videos.size());
+                            }
+                        });
+                    }
+                });
     }
 
     @Override
@@ -116,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public ObservableSource<List<Image>> apply(@NonNull Boolean aBoolean) throws Exception {
                                 if (aBoolean) {
+
                                     return mRxPhoto.doImage(new PickerConfig().setMaxSelectNum(1));
                                 } else {
                                     return Observable.error(new Throwable("没有权限"));
@@ -166,13 +190,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public ObservableSource<List<String>> apply(@NonNull String s) throws Exception {
                                 getPDialog().show();
-                                List<ZipInfo> zipInfos = new ArrayList<>();
+                                List<CompressInfo> compressInfos = new ArrayList<>();
                                 File file = new File(s);
-                                ZipInfo zipInfo = new ZipInfo(s
+                                CompressInfo compressInfo = new CompressInfo(s
                                         , getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "zip" + file.getName()
                                         , 100 * 1024);
-                                zipInfos.add(zipInfo);
-                                return mRxPhoto.doZip(zipInfos);
+                                compressInfos.add(compressInfo);
+                                return mRxPhoto.doZip(compressInfos);
                             }
                         })
                         .map(new Function<List<String>, List<Image>>() {
@@ -225,16 +249,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public ObservableSource<List<Image>> apply(@NonNull List<Image> images) throws Exception {
                                 getPDialog().show();
 
-                                List<ZipInfo> zipInfos = new ArrayList<>();
+                                List<CompressInfo> compressInfos = new ArrayList<>();
                                 for (int i = 0; i < images.size(); i++) {
                                     File file = new File(images.get(i).getData());
 
-                                    ZipInfo zipInfo = new ZipInfo(images.get(i).getData()
+                                    CompressInfo compressInfo = new CompressInfo(images.get(i).getData()
                                             , getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "zip" + File.separator + file.getName()
                                             /*, 100, 100*/, 100 * 1024);
-                                    zipInfos.add(zipInfo);
+                                    compressInfos.add(compressInfo);
                                 }
-                                return mRxPhoto.doZip(zipInfos)
+                                return mRxPhoto.doZip(compressInfos)
                                         .flatMap(new Function<List<String>, ObservableSource<List<Image>>>() {
                                             @Override
                                             public ObservableSource<List<Image>> apply(@NonNull List<String> list) throws Exception {
@@ -252,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .subscribe(new Consumer<List<Image>>() {
                             @Override
                             public void accept(@NonNull List<Image> images) throws Exception {
-                                Log.d(TAG, "accept: "+images.get(0).getData());
+                                Log.d(TAG, "accept: " + images.get(0).getData());
                                 getPDialog().dismiss();
                                 mAdapter.insertRange(images);
                             }

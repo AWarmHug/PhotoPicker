@@ -7,9 +7,10 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.warm.picker.WorkExecutor;
+import com.warm.picker.find.MediaFindCallBack;
 import com.warm.picker.find.entity.Album;
 import com.warm.picker.find.entity.Image;
-import com.warm.picker.find.callback.AlbumFindCallBack;
+import com.warm.picker.find.filter.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,36 +21,36 @@ import java.util.Map;
  * 时间：2017-10-16 14:12
  * 描述：
  */
-public class AlbumFind {
+public class AlbumFinder {
 
     private long mUnknowBucketId;
     private String mUnKnowBucketName = "unkonw";
-    private static AlbumFind albumFind = new AlbumFind();
+    private static AlbumFinder sAlbumFinder = new AlbumFinder();
 
     private Map<String, Album> mMap;
 
 
-    private AlbumFind() {
+    private AlbumFinder() {
         this.mMap = new ArrayMap<>();
     }
 
-    public static AlbumFind getInstance() {
-        return albumFind;
+    public static AlbumFinder getInstance() {
+        return sAlbumFinder;
     }
 
 
-    public void findAlbum(final ContentResolver cr, final AlbumFindCallBack callBack) {
+    public void findAlbum(final ContentResolver cr, final Filter filter, final MediaFindCallBack<List<Album>> callBack) {
         WorkExecutor.getInstance().runWorker(new Runnable() {
             @Override
             public void run() {
-                findAlbum(cr);
+                findAlbum(cr, filter);
                 returnList(callBack);
             }
         });
     }
 
 
-    private void returnList(AlbumFindCallBack callBack) {
+    private void returnList(MediaFindCallBack<List<Album>> callBack) {
         List<Album> list = new ArrayList<>();
         if (mMap != null) {
             //一般需要一个全部类
@@ -58,18 +59,18 @@ public class AlbumFind {
                 list.add(entry.getValue());
                 count += entry.getValue().getCount();
             }
-            Album allBean = new Album();
-            allBean.setBucketName(Album.BUCKET_NAME_ALL);
-            allBean.setBucketId(Album.BUCKET_ID_ALL);
-            allBean.setImage(list.get(0).getImage());
-            allBean.setCount(count);
-            list.add(0, allBean);
+            Album all = new Album();
+            all.setBucketName(Album.BUCKET_NAME_ALL);
+            all.setBucketId(Album.BUCKET_ID_ALL);
+            all.setImage(list.get(0).getImage());
+            all.setCount(count);
+            list.add(0, all);
             mMap.clear();
         }
         postAlbum(list, callBack);
     }
 
-    private void findAlbum(ContentResolver cr) {
+    private void findAlbum(ContentResolver cr, Filter filter) {
         String[] projections = {MediaStore.Images.Media.BUCKET_ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
         Cursor cursor = null;
         try {
@@ -80,8 +81,7 @@ public class AlbumFind {
                     String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
                     String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_ID));
                     Album album = createAlbum(bucketId, bucketName);
-
-                    findFirst(cr, bucketId, album);
+                    findFirst(cr, bucketId, album, filter);
 
                 } while (cursor.moveToNext());
             }
@@ -93,10 +93,10 @@ public class AlbumFind {
     }
 
 
-    private void findFirst(ContentResolver cr, String bucketId, Album album) {
+    private void findFirst(ContentResolver cr, String bucketId, Album album, Filter filter) {
         String[] projections = Image.PROJECTIONS;
-        String selection = MediaStore.Images.Media.BUCKET_ID + "=?";
-        String[] selectionArgs = {bucketId};
+        String selection = MediaStore.Images.Media.BUCKET_ID + "=" + bucketId + " AND " + filter.filter().getSelection();
+        String[] selectionArgs = filter.filter().getSelectionArgs();
 
         Cursor cursor = null;
         try {
@@ -148,11 +148,11 @@ public class AlbumFind {
     }
 
 
-    private void postAlbum(final List<Album> images, final AlbumFindCallBack callBack) {
+    private void postAlbum(final List<Album> images, final MediaFindCallBack<List<Album>> callBack) {
         WorkExecutor.getInstance().runUi(new Runnable() {
             @Override
             public void run() {
-                callBack.albumFind(images);
+                callBack.mediaFound(images);
             }
         });
     }

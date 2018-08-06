@@ -1,15 +1,9 @@
 package com.warm.picker.zip;
 
-import android.content.ContentResolver;
-import android.support.annotation.Nullable;
-import android.util.Log;
-
 import com.warm.picker.WorkExecutor;
-import com.warm.picker.find.entity.Image;
-import com.warm.picker.find.work.ImageFind;
-import com.warm.picker.zip.bean.ZipInfo;
+import com.warm.picker.zip.entity.CompressInfo;
+import com.warm.picker.zip.work.Compressor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,18 +22,17 @@ public class ImageZip {
     }
 
 
-    public void zipImages(final List<ZipInfo> zipInfos, final ZipCallBack callBack) {
-        final List<String> images = new Vector<>(zipInfos.size());
-        for (int i = 0; i < zipInfos.size(); i++) {
-            final ZipInfo zipInfo = zipInfos.get(i);
+    public void zipImages(final Compressor compressor, final List<CompressInfo> compressInfos, final CompressCallBack callBack) {
+        final List<String> images = new Vector<>(compressInfos.size());
+        for (int i = 0; i < compressInfos.size(); i++) {
+            final CompressInfo compressInfo = compressInfos.get(i);
 
             WorkExecutor.getInstance().runWorker(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "run: " + Thread.currentThread());
-                    String path = ZipAction.getInstance().zipImage(zipInfo);
+                    String path = compressor.compress(compressInfo);
                     images.add(path);
-                    if (images.size() == zipInfos.size()) {
+                    if (images.size() == compressInfos.size()) {
                         postUi(images, callBack);
                     }
                 }
@@ -48,27 +41,11 @@ public class ImageZip {
         }
     }
 
-    public List<Image> zipImage(final List<ZipInfo> zipInfos) {
-
-        final List<Image> images = new ArrayList<>(zipInfos.size());
-        for (int i = 0; i < zipInfos.size(); i++) {
-            ZipInfo zipInfo = zipInfos.get(i);
-            ZipAction.getInstance().zipImage(zipInfo);
-        }
-        return images;
-    }
-
-    @Nullable
-    public Image zipImage(final ContentResolver cr, ZipInfo zipInfo) {
-        String path = ZipAction.getInstance().zipImage(zipInfo);
-        return ImageFind.getInstance().findImageByPath(cr, path);
-    }
-
-    private void postUi(final List<String> imageBeans, final ZipCallBack callBack) {
+    private void postUi(final List<String> imageBeans, final CompressCallBack callBack) {
         WorkExecutor.getInstance().runUi(new Runnable() {
             @Override
             public void run() {
-                callBack.onFinish(imageBeans);
+                callBack.onCompress(imageBeans);
             }
         });
     }

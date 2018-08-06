@@ -5,7 +5,8 @@ package com.warm.picker.find.filter;
  * 时间：2018-08-03 15:22
  * 描述：
  */
-public abstract class Filter {
+public interface Filter {
 
+    FilterInfo filter();
 
 }

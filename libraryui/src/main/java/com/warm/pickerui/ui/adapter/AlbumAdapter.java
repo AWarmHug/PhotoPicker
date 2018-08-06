@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.warm.picker.find.entity.Album;
 import com.warm.pickerui.R;
-import com.warm.pickerui.DataManager;
+import com.warm.pickerui.config.PickerUI;
 import com.warm.pickerui.ui.base.BaseAdapter;
 import com.warm.pickerui.ui.base.BaseViewHolder;
 
@@ -51,9 +51,9 @@ public class AlbumAdapter extends BaseAdapter<Album, AlbumAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        DataManager.getInstance().getImageLoader().loadThumbnails(holder.album, list.get(position).getImage().getThumbnailPath());
+        PickerUI.getInstance().getImageLoader().loadThumbnails(holder.album, list.get(position).getImage().getThumbnailPath());
         holder.select.setSelected(list.get(position).isSelected());
-        holder.select.setImageResource(DataManager.getInstance().getConfig().getSelectDrawable());
+        holder.select.setImageResource(PickerUI.getInstance().getConfig().getSelectDrawable());
         holder.name.setText(list.get(position).getBucketName());
         holder.count.setText("共" + list.get(position).getCount() + "张");
     }

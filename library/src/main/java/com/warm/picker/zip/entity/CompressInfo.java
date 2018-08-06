@@ -1,4 +1,4 @@
-package com.warm.picker.zip.bean;
+package com.warm.picker.zip.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,7 +9,7 @@ import android.os.Parcelable;
  * 描述：
  */
 
-public class ZipInfo implements Parcelable {
+public class CompressInfo implements Parcelable {
 
     public String fromPath;
     public String toPath;
@@ -17,7 +17,7 @@ public class ZipInfo implements Parcelable {
     public int height;
     public int maxSize;
 
-    public ZipInfo(String fromPath, String toPath, int width, int height, int maxSize) {
+    public CompressInfo(String fromPath, String toPath, int width, int height, int maxSize) {
         this.fromPath = fromPath;
         this.toPath = toPath;
         this.width = width;
@@ -25,7 +25,7 @@ public class ZipInfo implements Parcelable {
         this.maxSize = maxSize;
     }
 
-    public ZipInfo(String fromPath, String toPath, int maxSize) {
+    public CompressInfo(String fromPath, String toPath, int maxSize) {
         this.fromPath = fromPath;
         this.toPath = toPath;
         this.maxSize = maxSize;
@@ -45,7 +45,7 @@ public class ZipInfo implements Parcelable {
         dest.writeInt(this.maxSize);
     }
 
-    protected ZipInfo(Parcel in) {
+    protected CompressInfo(Parcel in) {
         this.fromPath = in.readString();
         this.toPath = in.readString();
         this.width = in.readInt();
@@ -53,15 +53,15 @@ public class ZipInfo implements Parcelable {
         this.maxSize = in.readInt();
     }
 
-    public static final Creator<ZipInfo> CREATOR = new Creator<ZipInfo>() {
+    public static final Creator<CompressInfo> CREATOR = new Creator<CompressInfo>() {
         @Override
-        public ZipInfo createFromParcel(Parcel source) {
-            return new ZipInfo(source);
+        public CompressInfo createFromParcel(Parcel source) {
+            return new CompressInfo(source);
         }
 
         @Override
-        public ZipInfo[] newArray(int size) {
-            return new ZipInfo[size];
+        public CompressInfo[] newArray(int size) {
+            return new CompressInfo[size];
         }
     };
 }

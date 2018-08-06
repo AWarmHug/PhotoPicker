@@ -20,6 +20,7 @@ public class Image extends BaseMedia {
             MediaStore.MediaColumns.SIZE,
             MediaStore.MediaColumns.WIDTH,
             MediaStore.MediaColumns.HEIGHT,
+            MediaStore.MediaColumns.MIME_TYPE,
             BUCKET_ID,
             BUCKET_DISPLAY_NAME,
             DATE_TAKEN,

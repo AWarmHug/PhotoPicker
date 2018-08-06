@@ -11,7 +11,7 @@ import android.widget.Button;
 
 import com.warm.picker.WorkExecutor;
 import com.warm.picker.crop.CropView;
-import com.warm.picker.zip.ZipAction;
+import com.warm.picker.zip.work.ImageCompressor;
 import com.warm.pickerui.R;
 import com.warm.pickerui.config.CropConfig;
 import com.warm.pickerui.rx.RxPhotoFragment;
@@ -86,7 +86,7 @@ public class CropActivity extends AppCompatActivity implements View.OnClickListe
                             if (bitmap==null){
                                 success=false;
                             }else {
-                                success = ZipAction.getInstance().saveOutput(new File(mCropConfig.getToPath()), bitmap, 100, Bitmap.CompressFormat.JPEG);
+                                success = ImageCompressor.getInstance().saveOutput(new File(mCropConfig.getToPath()), bitmap, 100, Bitmap.CompressFormat.JPEG);
                                 bitmap.recycle();
                             }
                             finishBack(success);

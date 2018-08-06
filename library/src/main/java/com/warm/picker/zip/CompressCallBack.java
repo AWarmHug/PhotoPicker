@@ -9,6 +9,8 @@ import java.util.List;
  * 描述：
  */
 
-public interface ZipCallBack {
-    void onFinish(List<String> imageBean);
+public interface CompressCallBack {
+
+    void onCompress(List<String> imageBean);
+
 }
