@@ -1,4 +1,4 @@
-package com.warm.picker.zip.work;
+package com.warm.picker.compress.work;
 
 
 import android.graphics.Bitmap;
@@ -7,7 +7,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 
 import com.warm.picker.pick.filter.MimeType;
-import com.warm.picker.zip.entity.CompressInfo;
+import com.warm.picker.compress.entity.CompressInfo;
 
 import java.io.File;
 import java.io.IOException;

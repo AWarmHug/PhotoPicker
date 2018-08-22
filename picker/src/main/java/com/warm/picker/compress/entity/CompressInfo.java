@@ -1,4 +1,4 @@
-package com.warm.picker.zip.entity;
+package com.warm.picker.compress.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

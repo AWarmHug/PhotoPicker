@@ -1,8 +1,8 @@
-package com.warm.picker.zip;
+package com.warm.picker.compress;
 
 import com.warm.picker.WorkExecutor;
-import com.warm.picker.zip.entity.CompressInfo;
-import com.warm.picker.zip.work.Compressor;
+import com.warm.picker.compress.entity.CompressInfo;
+import com.warm.picker.compress.work.Compressor;
 
 import java.util.List;
 import java.util.Vector;

@@ -1,8 +1,8 @@
-package com.warm.picker.zip.work;
+package com.warm.picker.compress.work;
 
 import android.graphics.Bitmap;
 
-import com.warm.picker.zip.CompressUtils;
+import com.warm.picker.compress.CompressUtils;
 
 
 /**

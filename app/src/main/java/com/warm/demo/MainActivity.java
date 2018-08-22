@@ -21,7 +21,7 @@ import com.warm.picker.pick.entity.Image;
 import com.warm.picker.pick.entity.Video;
 import com.warm.picker.pick.filter.VideoFilter;
 import com.warm.picker.pick.work.VideoFinder;
-import com.warm.picker.zip.entity.CompressInfo;
+import com.warm.picker.compress.entity.CompressInfo;
 import com.warm.pickerui.config.CropConfig;
 import com.warm.pickerui.config.PickerConfig;
 import com.warm.pickerui.rx.RxPhoto;
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 List<CompressInfo> compressInfos = new ArrayList<>();
                                 File file = new File(s);
                                 CompressInfo compressInfo = new CompressInfo(s
-                                        , getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "zip" + file.getName()
+                                        , getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "compress" + file.getName()
                                         , 100 * 1024);
                                 compressInfos.add(compressInfo);
                                 return mRxPhoto.doZip(compressInfos);
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     File file = new File(images.get(i).getData());
 
                                     CompressInfo compressInfo = new CompressInfo(images.get(i).getData()
-                                            , getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "zip" + File.separator + file.getName()
+                                            , getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "compress" + File.separator + file.getName()
                                             /*, 100, 100*/, 100 * 1024);
                                     compressInfos.add(compressInfo);
                                 }

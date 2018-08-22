@@ -3,10 +3,10 @@ package com.warm.pickerui.rx;
 import android.support.v7.app.AppCompatActivity;
 
 import com.warm.picker.pick.entity.Image;
-import com.warm.picker.zip.CompressCallBack;
-import com.warm.picker.zip.ImageZip;
-import com.warm.picker.zip.entity.CompressInfo;
-import com.warm.picker.zip.work.ImageCompressor;
+import com.warm.picker.compress.CompressCallBack;
+import com.warm.picker.compress.ImageZip;
+import com.warm.picker.compress.entity.CompressInfo;
+import com.warm.picker.compress.work.ImageCompressor;
 import com.warm.pickerui.config.CropConfig;
 import com.warm.pickerui.config.PickerConfig;
 
