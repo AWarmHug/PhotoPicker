@@ -1,1 +1,1 @@
-include ':app', ':library', ':libraryui'
+include ':app', ':picker', ':pickerui'

@@ -15,12 +15,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.warm.picker.find.MediaFindCallBack;
-import com.warm.picker.find.entity.Album;
-import com.warm.picker.find.entity.Image;
-import com.warm.picker.find.entity.Video;
-import com.warm.picker.find.filter.VideoFilter;
-import com.warm.picker.find.work.VideoFinder;
+import com.warm.picker.pick.MediaFindCallBack;
+import com.warm.picker.pick.entity.Album;
+import com.warm.picker.pick.entity.Image;
+import com.warm.picker.pick.entity.Video;
+import com.warm.picker.pick.filter.VideoFilter;
+import com.warm.picker.pick.work.VideoFinder;
 import com.warm.picker.zip.entity.CompressInfo;
 import com.warm.pickerui.config.CropConfig;
 import com.warm.pickerui.config.PickerConfig;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public ProgressDialog getPDialog() {
         if (pDialog == null) {
-            pDialog = new ProgressDialog(this, R.style.AppTheme_Dialog_Progress);
+            pDialog = new ProgressDialog(this);
             pDialog.setMessage("请稍后...");
             pDialog.setCancelable(false);
             pDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
