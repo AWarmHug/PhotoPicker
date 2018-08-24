@@ -431,7 +431,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         File parentFile = checkParent(PickerUI.getInstance().getCameraDir());
         if (parentFile != null) {
             time = System.currentTimeMillis();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-ddHHmmss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-ddHHmmss", Locale.getDefault());
             String s = sdf.format(time);
             File file = new File(parentFile, String.format(Locale.getDefault(), "IMG_%s.jpg", s));
             Uri photoUri;
