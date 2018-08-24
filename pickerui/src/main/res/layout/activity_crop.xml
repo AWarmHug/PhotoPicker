@@ -8,7 +8,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tb"
-        style="@style/AppTheme.Toolbar"
+        style="@style/PickerTheme.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ic_vec_back"
@@ -22,7 +22,7 @@
 
     <Button
         android:id="@+id/bt_sure"
-        style="@style/PickerTheme.Button"
+        style="@style/PickerTheme.ActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

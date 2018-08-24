@@ -17,19 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
         android:background="@android:color/white">
 
         <Button
             android:id="@+id/album"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:enabled="false"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="16sp" />
+            android:enabled="false" />
 
         <Button
             android:id="@+id/preview"
@@ -37,12 +31,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:enabled="false"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="预览"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="16sp" />
+            android:text="预览" />
 
     </FrameLayout>
 
@@ -53,20 +42,16 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tb"
-        style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_vec_back"
-        app:title="图片选择">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/bt_sure"
-            style="@style/PickerTheme.Button"
+            style="?attr/actionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:enabled="false"
-            android:textSize="14sp" />
+            android:enabled="false" />
 
     </android.support.v7.widget.Toolbar>
 </RelativeLayout>

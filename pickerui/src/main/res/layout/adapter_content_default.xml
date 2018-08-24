@@ -7,20 +7,20 @@
     tools:layout_height="88dp">
 
     <ImageView
-        android:id="@+id/item_iv"
+        android:id="@+id/iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
-    <ImageView
-        android:id="@+id/item_cv"
+    <ImageButton
+        android:id="@+id/ib"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_gravity="end"
         android:padding="6dp" />
 
     <TextView
-        android:id="@+id/item_type"
+        android:id="@+id/type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"

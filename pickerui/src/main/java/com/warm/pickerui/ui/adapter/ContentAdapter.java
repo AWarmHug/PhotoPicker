@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -78,12 +79,12 @@ public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy_header, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_contentheader, parent, false);
 //            int height = parent.getMeasuredHeight() / 4;
 //            view.setMinimumHeight(height);
             return new HeaderViewHolder(view);
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_content_default, parent, false);
 //            int height = parent.getMeasuredHeight() / 4;
 //            view.setMinimumHeight(height);
             return new ViewHolder(view);
@@ -96,16 +97,16 @@ public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
 
         if (getItemViewType(position) == HEADER) {
             HeaderViewHolder viewHolder =(HeaderViewHolder)holder;
-            viewHolder.iv.setImageResource(PickerUI.getInstance().getConfig().getCameraIcon());
+            viewHolder.iv.setImageResource(PickerUI.getInstance().getCameraIcon());
             viewHolder.itemView.setBackgroundColor( Color.BLACK);
         } else {
             ViewHolder viewHolder =(ViewHolder)holder;
             if (more) {
-                viewHolder.cb.setVisibility(View.VISIBLE);
-                viewHolder.cb.setSelected(list.get(position - getHeaderSize()).isSelected());
-                viewHolder.cb.setImageResource(PickerUI.getInstance().getConfig().getSelectDrawable());
+                viewHolder.ib.setVisibility(View.VISIBLE);
+                viewHolder.ib.setSelected(list.get(position - getHeaderSize()).isSelected());
+//                viewHolder.cb.setImageResource(PickerUI.getInstance().getConfig().getSelectDrawable());
             } else {
-                viewHolder.cb.setVisibility(View.GONE);
+                viewHolder.ib.setVisibility(View.GONE);
             }
             PickerUI.getInstance().getImageLoader().loadThumbnails(viewHolder.iv, "file://" + list.get(position - getHeaderSize()).getThumbnailPath());
             viewHolder.type.setVisibility(View.VISIBLE);
@@ -154,7 +155,7 @@ public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
                 width = (screenWidth - ScreenUtils.dp2px(itemView.getContext(),5) * 4) / 3;
             }
             frame = (FrameLayout) itemView.findViewById(R.id.item_frame);
-            iv = (ImageView) itemView.findViewById(R.id.item_iv);
+            iv = (ImageView) itemView.findViewById(R.id.iv);
             frame.getLayoutParams().width = width;
             frame.getLayoutParams().height = width;
 
@@ -176,7 +177,7 @@ public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
     class ViewHolder extends BaseViewHolder {
         FrameLayout frame;
         ImageView iv;
-        ImageView cb;
+        ImageButton ib;
         TextView type;
 
         ViewHolder(View itemView) {
@@ -188,9 +189,9 @@ public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
                 width = (screenWidth - itemView.getResources().getDimensionPixelOffset(R.dimen.grid_space) * 4) / 3;
             }
             frame = (FrameLayout) itemView.findViewById(R.id.item_frame);
-            iv = (ImageView) itemView.findViewById(R.id.item_iv);
-            cb = (ImageView) itemView.findViewById(R.id.item_cv);
-            type = itemView.findViewById(R.id.item_type);
+            iv = (ImageView) itemView.findViewById(R.id.iv);
+            ib = (ImageButton) itemView.findViewById(R.id.ib);
+            type = itemView.findViewById(R.id.type);
             frame.getLayoutParams().width = width;
             frame.getLayoutParams().height = width;
 
@@ -205,7 +206,7 @@ public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
                         }
                     }
                 });
-                cb.setOnClickListener(new View.OnClickListener() {
+                ib.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onItemSelectListener.itemSelect(getAdapterPosition() - ContentAdapter.this.getHeaderSize(), list.get(getAdapterPosition() - ContentAdapter.this.getHeaderSize()));

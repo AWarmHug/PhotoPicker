@@ -14,12 +14,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.warm.picker.pick.entity.Image;
 import com.warm.pickerui.R;
-import com.warm.pickerui.config.PickerUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class PreviewFragment extends Fragment {
 
     private int mPosition;
     private ViewPager pager;
-    private ImageView ivSelect;
+    private ImageButton ib;
     private FrameLayout flSure;
     private int max;
     private boolean isAll;
@@ -89,7 +88,7 @@ public class PreviewFragment extends Fragment {
 
 
         pager = (ViewPager) view.findViewById(R.id.pager);
-        ivSelect = (ImageView) view.findViewById(R.id.iv_select);
+        ib = (ImageButton) view.findViewById(R.id.ib);
         flSure = (FrameLayout) view.findViewById(R.id.fl_sure);
 
     }
@@ -133,7 +132,7 @@ public class PreviewFragment extends Fragment {
                 setTb();
             }
         });
-        ivSelect.setOnClickListener(new View.OnClickListener() {
+        ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (images.get(mPosition).isSelected()) {
@@ -168,8 +167,7 @@ public class PreviewFragment extends Fragment {
             return;
         }
 //        tb.setTitle(String.format(Locale.getDefault(), "%d/%d", mPosition + 1, allImages.size()));
-        ivSelect.setSelected(allImages.get(mPosition).isSelected());
-        ivSelect.setImageResource(PickerUI.getInstance().getConfig().getSelectDrawable());
+        ib.setSelected(allImages.get(mPosition).isSelected());
 //        if (selectImages.size() != 0) {
 //            btSure.setEnabled(true);
 //            btSure.setText(String.format(Locale.getDefault(), "选中(%d/%d)", selectImages.size(), max));

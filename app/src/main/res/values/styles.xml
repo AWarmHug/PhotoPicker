@@ -8,4 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyPickerTheme" parent="PickerTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="imageButtonStyle">@style/MyPickerTheme.ImageButton</item>
+    </style>
+
+    <style name="MyPickerTheme.ImageButton" parent="PickerTheme.ImageButton">
+        <item name="android:src">@drawable/selector_select</item>
+    </style>
+
+
 </resources>

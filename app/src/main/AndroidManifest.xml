@@ -23,7 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.warm.pickerui.ui.PickerActivity" />
+        <activity android:name="com.warm.pickerui.ui.PickerActivity"
+            android:theme="@style/MyPickerTheme" />
 
         <activity
             android:name="com.warm.pickerui.ui.CropActivity"

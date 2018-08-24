@@ -10,7 +10,15 @@ import com.warm.pickerui.loader.ImageLoader;
  */
 
 public class PickerUI {
-    private Config config;
+    /**
+     * 调用系统相机拍照，存放的图片文件夹，图片文件名为IMG_time.jpg
+     */
+    private String cameraDir;
+
+    /**
+     * 选择界面中相机按钮的图标
+     */
+    private int cameraIcon;
 
     private ImageLoader mImageLoader;
 
@@ -31,13 +39,21 @@ public class PickerUI {
         return mImageLoader;
     }
 
-
-    public Config getConfig() {
-        return config;
+    public String getCameraDir() {
+        return cameraDir;
     }
 
-    public PickerUI setConfig(Config config) {
-        this.config = config;
+    public PickerUI setCameraDir(String cameraDir) {
+        this.cameraDir = cameraDir;
+        return this;
+    }
+
+    public int getCameraIcon() {
+        return cameraIcon;
+    }
+
+    public PickerUI setCameraIcon(int cameraIcon) {
+        this.cameraIcon = cameraIcon;
         return this;
     }
 }

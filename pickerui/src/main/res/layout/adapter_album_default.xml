@@ -38,8 +38,8 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/cb"
+    <ImageButton
+        android:id="@+id/ib"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_gravity="center_vertical"

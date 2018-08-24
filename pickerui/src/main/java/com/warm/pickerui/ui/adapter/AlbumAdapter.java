@@ -1,8 +1,10 @@
 package com.warm.pickerui.ui.adapter;
 
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,13 +53,12 @@ public class AlbumAdapter extends BaseAdapter<Album, AlbumAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Image image = list.get(position).getImage();
         if (image != null) {
             PickerUI.getInstance().getImageLoader().loadThumbnails(holder.album, image.getThumbnailPath());
         }
-        holder.select.setSelected(list.get(position).isSelected());
-        holder.select.setImageResource(PickerUI.getInstance().getConfig().getSelectDrawable());
+        holder.ib.setSelected(list.get(position).isSelected());
         holder.name.setText(list.get(position).getBucketName());
         holder.count.setText("共" + list.get(position).getCount() + "张");
 
@@ -65,14 +66,14 @@ public class AlbumAdapter extends BaseAdapter<Album, AlbumAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recy_album, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_album_default, parent, false));
     }
 
     class ViewHolder extends BaseViewHolder {
         ImageView album;
         TextView name;
         TextView count;
-        ImageView select;
+        ImageButton ib;
 
 
         public ViewHolder(View itemView) {
@@ -80,7 +81,7 @@ public class AlbumAdapter extends BaseAdapter<Album, AlbumAdapter.ViewHolder> {
             album = (ImageView) itemView.findViewById(R.id.iv_album);
             name = (TextView) itemView.findViewById(R.id.tv_album);
             count = (TextView) itemView.findViewById(R.id.tv_album_count);
-            select = (ImageView) itemView.findViewById(R.id.cb);
+            ib = (ImageButton) itemView.findViewById(R.id.ib);
             if (onItemSelectListener != null) {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

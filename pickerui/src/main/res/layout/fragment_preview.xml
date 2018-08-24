@@ -20,8 +20,8 @@
         android:paddingRight="12dp"
         android:paddingTop="12dp">
 
-        <ImageView
-            android:id="@+id/iv_select"
+        <ImageButton
+            android:id="@+id/ib"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="end"

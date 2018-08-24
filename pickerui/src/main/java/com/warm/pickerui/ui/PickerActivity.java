@@ -38,6 +38,7 @@ import com.warm.pickerui.ui.adapter.SimpleItemSelectListener;
 import com.warm.pickerui.weidget.GridItemDecoration;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +118,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image);
+        setContentView(R.layout.activity_picker);
 
         btSure = (Button) findViewById(R.id.bt_sure);
         btSure.setOnClickListener(this);
@@ -427,10 +428,12 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private void openCamera() {
-        File parentFile = checkParent(PickerUI.getInstance().getConfig().getCameraDir());
+        File parentFile = checkParent(PickerUI.getInstance().getCameraDir());
         if (parentFile != null) {
             time = System.currentTimeMillis();
-            File file = new File(parentFile, String.format(Locale.getDefault(), "IMG_%d.jpg", time));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-ddHHmmss");
+            String s = sdf.format(time);
+            File file = new File(parentFile, String.format(Locale.getDefault(), "IMG_%s.jpg", s));
             Uri photoUri;
             cameraPath = file.getPath();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

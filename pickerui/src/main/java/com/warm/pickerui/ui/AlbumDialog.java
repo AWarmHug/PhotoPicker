@@ -33,8 +33,7 @@ public class AlbumDialog extends BottomSheetDialog {
 
 
     public AlbumDialog(@NonNull Context context, List<Album> albums, final OnItemSelectListener<Album> onItemClickListener) {
-        super(context);
-
+        super(context,R.style.PickerTheme_BottomSheetDialog);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_album, null, true);
         setContentView(view);
 
