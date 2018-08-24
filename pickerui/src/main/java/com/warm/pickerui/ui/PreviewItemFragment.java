@@ -49,7 +49,7 @@ public class PreviewItemFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        pv = (PhotoView) view.findViewById(R.id.pv);
+        pv =  view.findViewById(R.id.pv);
         PickerUI.getInstance().getImageLoader().load(pv, mImage.getData());
         pv.setOnClickListener(new View.OnClickListener() {
             @Override

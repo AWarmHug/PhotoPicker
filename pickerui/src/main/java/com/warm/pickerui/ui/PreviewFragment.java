@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -33,6 +35,10 @@ import java.util.Locale;
 public class PreviewFragment extends Fragment {
     private static final String TAG = "photoPickerTAG";
 
+
+    private Toolbar tb;
+
+    private Button btSure;
 
     private int mPosition;
     private ViewPager pager;
@@ -78,6 +84,12 @@ public class PreviewFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (getActivity() instanceof PickerActivity) {
+            tb = getActivity().findViewById(R.id.tb);
+            btSure = getActivity().findViewById(R.id.bt_sure);
+        }
+
         view.setBackgroundColor(Color.BLACK);
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -86,10 +98,9 @@ public class PreviewFragment extends Fragment {
             }
         });
 
-
-        pager = (ViewPager) view.findViewById(R.id.pager);
-        ib = (ImageButton) view.findViewById(R.id.ib);
-        flSure = (FrameLayout) view.findViewById(R.id.fl_sure);
+        pager = view.findViewById(R.id.pager);
+        ib = view.findViewById(R.id.ib);
+        flSure = view.findViewById(R.id.fl_sure);
 
     }
 
@@ -162,19 +173,20 @@ public class PreviewFragment extends Fragment {
      * 修改Toolbar显示内容
      */
     private void setTb() {
+
         Log.d(TAG, "setTb: ");
         if (allImages == null || allImages.size() == 0) {
             return;
         }
-//        tb.setTitle(String.format(Locale.getDefault(), "%d/%d", mPosition + 1, allImages.size()));
+        tb.setTitle(String.format(Locale.getDefault(), "%d/%d", mPosition + 1, allImages.size()));
         ib.setSelected(allImages.get(mPosition).isSelected());
-//        if (selectImages.size() != 0) {
-//            btSure.setEnabled(true);
-//            btSure.setText(String.format(Locale.getDefault(), "选中(%d/%d)", selectImages.size(), max));
-//        } else {
-//            btSure.setEnabled(false);
-//            btSure.setText("选中");
-//        }
+        if (selectImages.size() != 0) {
+            btSure.setEnabled(true);
+            btSure.setText(String.format(Locale.getDefault(), "选中(%d/%d)", selectImages.size(), max));
+        } else {
+            btSure.setEnabled(false);
+            btSure.setText("选中");
+        }
     }
 
 
@@ -182,16 +194,27 @@ public class PreviewFragment extends Fragment {
      * Toolbar 显示或者隐藏
      */
     public void anim() {
-//        if (tb.getTranslationY() == 0) {
-//            tb.animate().translationY(-tb.getHeight()).setDuration(300).start();
-//            flSure.animate().translationY(flSure.getHeight()).setDuration(300).start();
-//        } else {
-//            tb.animate().translationY(0).setDuration(300).start();
-//            flSure.animate().translationY(0).setDuration(300).start();
-//
-//        }
+        if (tb.getTranslationY() == 0) {
+            tb.animate().translationY(-tb.getHeight()).setDuration(300).start();
+            flSure.animate().translationY(flSure.getHeight()).setDuration(300).start();
+        } else {
+            tb.animate().translationY(0).setDuration(300).start();
+            flSure.animate().translationY(0).setDuration(300).start();
+        }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //将toolbar恢复原样
+        if (tb.getTag() != null) {
+            tb.setTitle((CharSequence) tb.getTag());
+        }
+        if (tb.getTranslationY() != 0) {
+            tb.animate().translationY(0).setDuration(150).start();
+            flSure.animate().translationY(0).setDuration(150).start();
+        }
+    }
 
     private class Adapter extends FragmentStatePagerAdapter {
         private List<Image> imageBeen;

@@ -16,6 +16,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -58,7 +59,6 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     //权限请求中的requestCode必须大于0
     public static final int REQUEST_CODE_PICK = 100;
 
-
     public static final int REQUEST_CODE_CAMERA = 101;
 
     public static final String KEY_PICKER_CONFIG = "key_picker_config";
@@ -67,7 +67,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     public static final String KEY_IMAGES = "images";
     public static final String KEY_SELECT_IMAGES = "selectImages";
 
-
+    private Toolbar tb;
     private RecyclerView mList;
     private Button tvAlbum;
     private Button mPreview;
@@ -119,13 +119,20 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picker);
-
-        btSure = (Button) findViewById(R.id.bt_sure);
+        tb=findViewById(R.id.tb);
+        tb.setTag(tb.getTitle());
+        tb.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        btSure = findViewById(R.id.bt_sure);
         btSure.setOnClickListener(this);
-        mList = (RecyclerView) findViewById(R.id.content_list);
-        tvAlbum = (Button) findViewById(R.id.album);
-        mPreview = (Button) findViewById(R.id.preview);
+        mList = findViewById(R.id.content_list);
+        tvAlbum = findViewById(R.id.album);
         tvAlbum.setOnClickListener(this);
+        mPreview = findViewById(R.id.preview);
         mPreview.setOnClickListener(this);
 
         Log.d(TAG, "PickerActivity--onCreate: ");
@@ -135,7 +142,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
             mPickerConfig = getIntent().getParcelableExtra(KEY_PICKER_CONFIG);
         }
 
-        if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PICK);
         } else {
             findAlbum(savedInstanceState);
@@ -400,7 +407,7 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent();
+        Intent intent = getIntent();
         int i = v.getId();
         if (i == R.id.bt_sure) {
             intent.putParcelableArrayListExtra(RxPhotoFragment.KEY_SELECT_IMAGES, (ArrayList<Image>) mContentAdapter.getSelectedImages());
@@ -417,13 +424,6 @@ public class PickerActivity extends AppCompatActivity implements View.OnClickLis
         } else if (i == R.id.preview) {
             goPreview(0, false);
         }
-    }
-
-    public void backInfo() {
-        Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(RxPhotoFragment.KEY_SELECT_IMAGES, (ArrayList<Image>) mContentAdapter.getSelectedImages());
-        setResult(RESULT_OK, intent);
-        finish();
     }
 
 

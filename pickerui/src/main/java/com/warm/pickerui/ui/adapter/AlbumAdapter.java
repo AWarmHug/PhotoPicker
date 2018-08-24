@@ -64,8 +64,9 @@ public class AlbumAdapter extends BaseAdapter<Album, AlbumAdapter.ViewHolder> {
 
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_album_default, parent, false));
     }
 
@@ -76,7 +77,7 @@ public class AlbumAdapter extends BaseAdapter<Album, AlbumAdapter.ViewHolder> {
         ImageButton ib;
 
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             album = (ImageView) itemView.findViewById(R.id.iv_album);
             name = (TextView) itemView.findViewById(R.id.tv_album);

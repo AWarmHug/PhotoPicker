@@ -27,14 +27,12 @@ import java.util.List;
 
 public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
 
-    private static final int HEADER = -1;
     private static final String TAG = "photoPickerTAG";
 
+    private static final int HEADER = -1;
     private List<Image> selectedImages;
-
     private boolean needHeader;
     private boolean more;
-
     private OnItemSelectListener<Image> onItemSelectListener;
 
 
@@ -75,18 +73,13 @@ public class ContentAdapter extends BaseAdapter<Image, BaseViewHolder> {
         selectedImages.remove(list.get(position));
     }
 
-
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_contentheader, parent, false);
-//            int height = parent.getMeasuredHeight() / 4;
-//            view.setMinimumHeight(height);
             return new HeaderViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_content_default, parent, false);
-//            int height = parent.getMeasuredHeight() / 4;
-//            view.setMinimumHeight(height);
             return new ViewHolder(view);
         }
 

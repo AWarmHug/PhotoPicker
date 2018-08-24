@@ -117,7 +117,7 @@ char* jstrinTostring(JNIEnv* env, jbyteArray barr) {
     return rtn;
 }
 
-jstring Java_com_warm_picker_zip_CompressUtils_compress(JNIEnv* env,
+jstring Java_com_warm_picker_compress_CompressUtils_compress(JNIEnv* env,
                                                        jobject thiz, jobject bitmapcolor, int w, int h, int quality,
                                                        jbyteArray fileNameStr, jboolean optimize) {
 
